@@ -3,7 +3,7 @@
     android:id="@+id/scan_now_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ss174h.amsa.ScannerFragment">
+    tools:context="com.ss174h.amsa.APKScannerFragment">
 
     <RelativeLayout
         android:layout_width="wrap_content"

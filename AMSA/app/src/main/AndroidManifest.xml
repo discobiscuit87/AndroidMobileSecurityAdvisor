@@ -21,8 +21,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
 
-        <service android:name=".ScannerService" />
+        <service android:name=".APKScannerService" />
 
+        <activity android:name=".ViewAppsActivity"></activity>
     </application>
 
 </manifest>

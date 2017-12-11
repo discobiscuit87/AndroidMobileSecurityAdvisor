@@ -75,7 +75,11 @@ public class APKScannerFragment extends Fragment {
             if(array.isEmpty()) {
                 Toast.makeText(context, "No sideloaded applications installed!", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(context, "Sideloaded applications installed!", Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "Sideloaded applications installed!", Toast.LENGTH_LONG).show();
+                Intent appIntent = new Intent(context, ViewAppsActivity.class);
+                appIntent.putExtra("toolbarName","Sideloaded Applications");
+                appIntent.putStringArrayListExtra("array",array);
+                context.startActivity(appIntent);
             }
         }
     }
