@@ -6,15 +6,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
-import android.content.pm.Signature;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateFactory;
-import java.security.cert.CertificateNotYetValidException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 
 import static android.content.pm.PackageManager.GET_CONFIGURATIONS;
@@ -22,7 +16,7 @@ import static android.content.pm.PackageManager.GET_GIDS;
 import static android.content.pm.PackageManager.GET_PERMISSIONS;
 import static android.content.pm.PackageManager.GET_SIGNATURES;
 
-public class ScannerService extends IntentService {
+public class APKScannerService extends IntentService {
 
     private PackageManager pm;
     CertificateFactory cf;
@@ -30,8 +24,8 @@ public class ScannerService extends IntentService {
     private static final int FLAGS = GET_GIDS | GET_CONFIGURATIONS | GET_PERMISSIONS | GET_SIGNATURES;
     private ArrayList<String> packages = new ArrayList<>();
 
-    public ScannerService() {
-        super("ScannerService");
+    public APKScannerService() {
+        super("APKScannerService");
     }
 
     @Override
@@ -42,7 +36,7 @@ public class ScannerService extends IntentService {
         try {
             cf = CertificateFactory.getInstance("X509");
         } catch (CertificateException e) {
-            Log.wtf("ScannerService", "Failed to get X509 certificate factory");
+            Log.wtf("APKScannerService", "Failed to get X509 certificate factory");
         }
     }
 
@@ -55,7 +49,7 @@ public class ScannerService extends IntentService {
                 PackageInfo packageInfo = this.pm.getPackageInfo(pName, FLAGS);
                 this.scan(packageInfo);
             } catch (PackageManager.NameNotFoundException e) {
-                Log.wtf("ScannerService", "No such package: " + pName);
+                Log.wtf("APKScannerService", "No such package: " + pName);
             }
         } else {
             for (PackageInfo packageInfo : this.pm.getInstalledPackages(FLAGS)) {
@@ -64,7 +58,7 @@ public class ScannerService extends IntentService {
         }
 
         Intent intent = new Intent();
-        intent.setAction(ScannerFragment.requestReceiver.PROCESS_RESPONSE);
+        intent.setAction(APKScannerFragment.myReceiver.PROCESS_RESPONSE);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.putStringArrayListExtra(RESPONSE_ARRAY,packages);
         sendBroadcast(intent);

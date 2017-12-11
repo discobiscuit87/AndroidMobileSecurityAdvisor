@@ -21,10 +21,11 @@ public class MainActivity extends AppCompatActivity {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ScannerFragment fragment = new ScannerFragment();
+                APKScannerFragment fragment = new APKScannerFragment();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.add(R.id.container,fragment,"Scanner");
+                fragmentTransaction.addToBackStack("APKScanner");
                 fragmentTransaction.commit();
             }
         });
@@ -68,6 +69,18 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this,"Reviewing mobile environment",Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        int count = getFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+            //additional code
+        } else {
+            getFragmentManager().popBackStack();
+        }
     }
 
 }
