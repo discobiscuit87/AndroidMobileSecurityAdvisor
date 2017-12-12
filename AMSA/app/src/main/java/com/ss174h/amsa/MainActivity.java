@@ -50,6 +50,12 @@ public class MainActivity extends AppCompatActivity {
         b4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MonitorBehaviourFragment fragment = new MonitorBehaviourFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.container,fragment,"Scanner");
+                fragmentTransaction.addToBackStack("APKScanner");
+                fragmentTransaction.commit();
                 Toast.makeText(MainActivity.this,"Monitoring app behaviour",Toast.LENGTH_LONG).show();
             }
         });
