@@ -2,15 +2,26 @@ package com.ss174h.amsa;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.ss174h.amsa.APKScanner.APKScannerFragment;
+import com.ss174h.amsa.APKScanner.APKScannerService;
+import com.ss174h.amsa.APKScanner.ViewAppsCertActivity;
+
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     Button b1, b2, b3, b4, b5, b6;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +61,6 @@ public class MainActivity extends AppCompatActivity {
         b4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MonitorBehaviourFragment fragment = new MonitorBehaviourFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(R.id.container,fragment,"Scanner");
-                fragmentTransaction.addToBackStack("APKScanner");
-                fragmentTransaction.commit();
                 Toast.makeText(MainActivity.this,"Monitoring app behaviour",Toast.LENGTH_LONG).show();
             }
         });
@@ -87,5 +92,4 @@ public class MainActivity extends AppCompatActivity {
             getFragmentManager().popBackStack();
         }
     }
-
 }

@@ -1,4 +1,4 @@
-package com.ss174h.amsa;
+package com.ss174h.amsa.APKScanner;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -19,7 +19,6 @@ import static android.content.pm.PackageManager.GET_SIGNATURES;
 public class APKScannerService extends IntentService {
 
     private PackageManager pm;
-    CertificateFactory cf;
     public static final String RESPONSE_ARRAY = "myArray";
     private static final int FLAGS = GET_GIDS | GET_CONFIGURATIONS | GET_PERMISSIONS | GET_SIGNATURES;
     private ArrayList<String> packages = new ArrayList<>();
@@ -33,11 +32,6 @@ public class APKScannerService extends IntentService {
         super.onCreate();
 
         this.pm = super.getPackageManager();
-        try {
-            cf = CertificateFactory.getInstance("X509");
-        } catch (CertificateException e) {
-            Log.wtf("APKScannerService", "Failed to get X509 certificate factory");
-        }
     }
 
     @Override
@@ -77,8 +71,7 @@ public class APKScannerService extends IntentService {
 
         if (install_package_manager == null) return false;
 
-        else if (install_package_manager.equals("com.google.android.feedback")
-                || install_package_manager.equals("com.android.vending")) {
+        else if (install_package_manager.equals("com.google.android.feedback") || install_package_manager.equals("com.android.vending")) {
             return true;
         }
 

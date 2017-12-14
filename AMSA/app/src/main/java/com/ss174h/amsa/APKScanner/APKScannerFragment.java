@@ -1,4 +1,4 @@
-package com.ss174h.amsa;
+package com.ss174h.amsa.APKScanner;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.ss174h.amsa.R;
 
 import java.util.ArrayList;
 
@@ -75,9 +77,7 @@ public class APKScannerFragment extends Fragment {
             if(array.isEmpty()) {
                 Toast.makeText(context, "No sideloaded applications installed!", Toast.LENGTH_LONG).show();
             } else {
-                //Toast.makeText(context, "Sideloaded applications installed!", Toast.LENGTH_LONG).show();
-                Intent appIntent = new Intent(context, ViewAppsActivity.class);
-                appIntent.putExtra("toolbarName","Sideloaded Applications");
+                Intent appIntent = new Intent(context, ViewAppsCertActivity.class);
                 appIntent.putStringArrayListExtra("array",array);
                 context.startActivity(appIntent);
             }
