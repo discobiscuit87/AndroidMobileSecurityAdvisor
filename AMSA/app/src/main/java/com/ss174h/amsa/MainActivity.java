@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.ss174h.amsa.APKScanner.APKScannerFragment;
 import com.ss174h.amsa.APKScanner.APKScannerService;
 import com.ss174h.amsa.APKScanner.ViewAppsCertActivity;
+import com.ss174h.amsa.EnvCondition.EnvironmentInfoFragment;
 
 import java.util.ArrayList;
 
@@ -78,6 +80,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this,"Reviewing mobile environment",Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(getApplicationContext(), EnvironmentInfoFragment.class);
+
+                startActivityForResult(intent,0);
             }
         });
     }
