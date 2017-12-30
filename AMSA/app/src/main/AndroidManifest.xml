@@ -23,8 +23,11 @@
 
         <service android:name=".APKScanner.APKScannerService" />
 
-        <activity android:name=".APKScanner.ViewAppsCertActivity" />
+        <activity android:name=".ViewAppsActivity" />
         <activity android:name=".APKScanner.CheckAppCertActivity" />
+        <activity android:name=".CheckPermissions.ViewAppsPermsActivity" />
+        <activity android:name=".CheckPermissions.CheckAppPermsActivity" />
+        <activity android:name=".CheckPermissions.CheckAppPermissionsActivity"></activity>
     </application>
 
 </manifest>

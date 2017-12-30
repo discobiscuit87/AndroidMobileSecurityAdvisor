@@ -95,5 +95,4 @@ public class CheckAppCertActivity extends AppCompatActivity {
             t6.setTextColor(getResources().getColor(R.color.errorColor));
         }
     }
-
 }

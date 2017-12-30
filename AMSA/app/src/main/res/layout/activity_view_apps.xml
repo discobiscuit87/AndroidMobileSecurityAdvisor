@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ss174h.amsa.APKScanner.ViewAppsCertActivity"
+    tools:context="com.ss174h.amsa.ViewAppsActivity"
     android:background="@drawable/bg">
 
 

@@ -1,21 +1,16 @@
 package com.ss174h.amsa;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.ss174h.amsa.APKScanner.APKScannerFragment;
 import com.ss174h.amsa.APKScanner.APKScannerService;
-import com.ss174h.amsa.APKScanner.ViewAppsCertActivity;
 import com.ss174h.amsa.EnvCondition.EnvironmentInfoFragment;
 
 import java.util.ArrayList;
@@ -23,7 +18,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     Button b1, b2, b3, b4, b5, b6;
-    Intent intent;
+    public static final String PROCESS_RESPONSE = "com.ss174h.app_scanner.intent.action.PROCESS_RESPONSE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +29,12 @@ public class MainActivity extends AppCompatActivity {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                APKScannerFragment fragment = new APKScannerFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(R.id.container,fragment,"Scanner");
-                fragmentTransaction.addToBackStack("APKScanner");
-                fragmentTransaction.commit();
+                IntentFilter intentFilter = new IntentFilter(PROCESS_RESPONSE);
+                intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+                Intent intent = new Intent(v.getContext(), APKScannerService.class);
+                v.getContext().startService(intent);
+                APKReceiver receiver = new APKReceiver();
+                v.getContext().registerReceiver(receiver, intentFilter);
             }
         });
 
@@ -55,7 +50,12 @@ public class MainActivity extends AppCompatActivity {
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this,"Viewing app permissions",Toast.LENGTH_LONG).show();
+                IntentFilter intentFilter = new IntentFilter(PROCESS_RESPONSE);
+                intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+                Intent intent = new Intent(v.getContext(), APKScannerService.class);
+                v.getContext().startService(intent);
+                PermissionsReceiver receiver = new PermissionsReceiver();
+                v.getContext().registerReceiver(receiver, intentFilter);
             }
         });
 
@@ -90,12 +90,43 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        int count = getFragmentManager().getBackStackEntryCount();
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+    }
 
-        if (count == 0) {
-            super.onBackPressed();
-        } else {
-            getFragmentManager().popBackStack();
+    public class APKReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            ArrayList<String> array = intent.getStringArrayListExtra("array");
+
+            if(array.isEmpty()) {
+                Toast.makeText(context, "No sideloaded applications installed!", Toast.LENGTH_LONG).show();
+            } else {
+                Intent appIntent = new Intent(context, ViewAppsActivity.class);
+                appIntent.putStringArrayListExtra("array",array);
+                appIntent.putExtra("Check","CheckCerts");
+                context.startActivity(appIntent);
+            }
+        }
+    }
+
+    public class PermissionsReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            ArrayList<String> array = intent.getStringArrayListExtra("array");
+
+            if(array.isEmpty()) {
+                Toast.makeText(context, "No sideloaded applications installed!", Toast.LENGTH_LONG).show();
+            } else {
+                Intent appIntent = new Intent(context, ViewAppsActivity.class);
+                appIntent.putStringArrayListExtra("array",array);
+                appIntent.putExtra("Check","CheckPerms");
+                context.startActivity(appIntent);
+            }
         }
     }
 }

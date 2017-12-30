@@ -1,4 +1,4 @@
-package com.ss174h.amsa.APKScanner;
+package com.ss174h.amsa;
 
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -11,17 +11,17 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ss174h.amsa.AppAdapter;
-import com.ss174h.amsa.R;
+import com.ss174h.amsa.APKScanner.CheckAppCertActivity;
+import com.ss174h.amsa.CheckPermissions.CheckAppPermissionsActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class ViewAppsCertActivity extends AppCompatActivity {
+public class ViewAppsActivity extends AppCompatActivity {
 
-    private String version, name, installedOn, packName;
+    private String version, name, installedOn, packName, type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -31,6 +31,7 @@ public class ViewAppsCertActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         packages = intent.getStringArrayListExtra("array");
+        type = intent.getStringExtra("Check");
 
         TextView t = findViewById(R.id.page_title);
         t.setText("Sideloaded Applications");
@@ -50,16 +51,31 @@ public class ViewAppsCertActivity extends AppCompatActivity {
                     return;
                 }
 
-                getAppInfo(getPackageManager(),applicationInfo);
-                Intent intent = new Intent(view.getContext(),CheckAppCertActivity.class);
-                intent.putExtra("name", name);
-                intent.putExtra("version", version);
-                intent.putExtra("installedOn", installedOn);
-                intent.putExtra("packName", packName);
-                startActivity(intent);
+                if(type.equals("CheckCerts")) {
+                    getAppInfo(getPackageManager(),applicationInfo);
+                    Intent intent = new Intent(view.getContext(),CheckAppCertActivity.class);
+                    intent.putExtra("name", name);
+                    intent.putExtra("version", version);
+                    intent.putExtra("installedOn", installedOn);
+                    intent.putExtra("packName", packName);
+                    startActivity(intent);
+                } else if(type.equals("CheckPerms")) {
+                    getAppInfo(getPackageManager(),applicationInfo);
+                    Intent intent = new Intent(view.getContext(),CheckAppPermissionsActivity.class);
+                    intent.putExtra("name", name);
+                    intent.putExtra("version", version);
+                    intent.putExtra("installedOn", installedOn);
+                    intent.putExtra("packName", packName);
+                    startActivity(intent);
+                }
             }
         });
+    }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 
     public void getAppInfo(PackageManager pm, ApplicationInfo appInfo) {

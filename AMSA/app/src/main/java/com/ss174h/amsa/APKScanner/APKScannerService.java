@@ -19,9 +19,9 @@ import static android.content.pm.PackageManager.GET_SIGNATURES;
 public class APKScannerService extends IntentService {
 
     private PackageManager pm;
-    public static final String RESPONSE_ARRAY = "myArray";
-    private static final int FLAGS = GET_GIDS | GET_CONFIGURATIONS | GET_PERMISSIONS | GET_SIGNATURES;
+    private static final int FLAGS = GET_PERMISSIONS | GET_SIGNATURES;
     private ArrayList<String> packages = new ArrayList<>();
+    public static final String PROCESS_RESPONSE = "com.ss174h.app_scanner.intent.action.PROCESS_RESPONSE";
 
     public APKScannerService() {
         super("APKScannerService");
@@ -52,9 +52,9 @@ public class APKScannerService extends IntentService {
         }
 
         Intent intent = new Intent();
-        intent.setAction(APKScannerFragment.myReceiver.PROCESS_RESPONSE);
+        intent.setAction(PROCESS_RESPONSE);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
-        intent.putStringArrayListExtra(RESPONSE_ARRAY,packages);
+        intent.putStringArrayListExtra("array",packages);
         sendBroadcast(intent);
     }
 
