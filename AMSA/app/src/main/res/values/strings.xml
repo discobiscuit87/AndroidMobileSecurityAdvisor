@@ -6,4 +6,5 @@
     <color name="white">#FFFFFF</color>
     <color name="errorColor">#f00</color>
     <color name="goodColor">#32CD32</color>
+    <string name="title_activity_review_env_presenter">ReviewEnvPresenter</string>
 </resources>

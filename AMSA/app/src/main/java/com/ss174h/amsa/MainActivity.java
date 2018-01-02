@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.ss174h.amsa.APKScanner.APKScannerService;
-import com.ss174h.amsa.EnvCondition.EnvironmentInfoFragment;
+import com.ss174h.amsa.EnvCondition.ReviewEnv;
 
 import java.util.ArrayList;
 
@@ -81,9 +81,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this,"Reviewing mobile environment",Toast.LENGTH_LONG).show();
 
-                Intent intent = new Intent(getApplicationContext(), EnvironmentInfoFragment.class);
+                Intent intent = new Intent(getApplicationContext(), ReviewEnv.class);
 
                 startActivityForResult(intent,0);
+
+               // Intent intent = new Intent(getApplicationContext(), EnvInfo.class);
+
+                startActivity(intent);
             }
         });
     }

@@ -27,7 +27,11 @@
         <activity android:name=".APKScanner.CheckAppCertActivity" />
         <activity android:name=".CheckPermissions.ViewAppsPermsActivity" />
         <activity android:name=".CheckPermissions.CheckAppPermsActivity" />
-        <activity android:name=".CheckPermissions.CheckAppPermissionsActivity"></activity>
+        <activity android:name=".CheckPermissions.CheckAppPermissionsActivity" />
+        <activity
+            android:name=".EnvCondition.ReviewEnv"
+            android:label="@string/title_activity_review_env_presenter"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
