@@ -9,6 +9,7 @@ import android.os.Build;
 public class ReviewEnvPresenter {
 
     private ReviewEnv reviewEnvPre;
+    String codeName = "";
 
     public ReviewEnvPresenter(ReviewEnv reviewEnvPre)
     {
@@ -19,11 +20,31 @@ public class ReviewEnvPresenter {
     {
         String release = Build.VERSION.RELEASE;
         int sdkVersion = Build.VERSION.SDK_INT;
-        return "Android SDK: " + sdkVersion + " (Operating System Version: " + release +")";
+
+        double releaseNumeric = Double.parseDouble(Build.VERSION.RELEASE.replaceAll("(\\d+[.]\\d+)(.*)","$1"));
+
+        if(releaseNumeric<7)
+            codeName = "Marshmallow";
+        else if(releaseNumeric<8)
+            codeName = "Nougat";
+        else if(releaseNumeric<9)
+            codeName = "Oreo";
+
+        return "Android SDK: " + sdkVersion + " (Operating System Version: " + release + " " + codeName +")";
+    }
+
+    public boolean checkAndroidVersion()
+    {
+        if(codeName.equalsIgnoreCase("Oreo"))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public String getAndroidLatestVersion()
     {
-        return "";
+        return "Oreo";
     }
 }

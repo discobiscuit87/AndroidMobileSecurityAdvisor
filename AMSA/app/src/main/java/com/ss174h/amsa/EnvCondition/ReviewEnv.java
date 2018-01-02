@@ -41,34 +41,36 @@ public class ReviewEnv extends AppCompatActivity {
 
         txtView.setText(currentAndroidVersion);
 
-        // 1. Instantiate an AlertDialog.Builder with its constructor
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //Prompt for system update if current os version is not the latest
+        if(!reviewEnvPresenter.checkAndroidVersion())
+        {
+            // 1. Instantiate an AlertDialog.Builder with its constructor
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked update os button
+            builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked update os button
 
-                dialog.dismiss();
-            }
-        });
+                    dialog.dismiss();
+                }
+            });
 
-        builder.setPositiveButton("Update OS",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked update os button
+            builder.setPositiveButton("Update OS",new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked update os button
 
-                startActivityForResult(new Intent(Settings.ACTION_DEVICE_INFO_SETTINGS),0);
-            }
-        });
+                    startActivityForResult(new Intent(Settings.ACTION_DEVICE_INFO_SETTINGS),0);
+                }
+            });
 
+            // 2. Chain together various setter methods to set the dialog characteristics
+            builder.setMessage("Please select system update to get the latest operating" +
+                    " System for your device").setTitle("System Update");
 
-        // 2. Chain together various setter methods to set the dialog characteristics
-        builder.setMessage("Please select system update to get the latest operating" +
-                " System for your device").setTitle("System Update");
-
-        // 3. Get the AlertDialog from create()
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        //envInfoPresenter.formText();
-
+            // 3. Get the AlertDialog from create()
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            //envInfoPresenter.formText();
+        }
     }
 }

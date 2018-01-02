@@ -160,17 +160,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ReviewEnv.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ReviewEnv.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ss174h/amsa/EnvCondition/ReviewEnv.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="605">
-              <caret line="70" column="38" lean-forward="false" selection-start-line="70" selection-start-column="38" selection-end-line="70" selection-end-column="38" />
+            <state relative-caret-position="1050">
+              <caret line="73" column="9" lean-forward="false" selection-start-line="73" selection-start-column="9" selection-end-line="73" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1686#1899#0" expanded="true" />
-                <element signature="e#1898#1899#0" expanded="true" />
-                <element signature="e#1949#2220#0" expanded="true" />
-                <element signature="e#2219#2220#0" expanded="true" />
+                <element signature="e#1837#2070#0" expanded="true" />
+                <element signature="e#2069#2070#0" expanded="true" />
+                <element signature="e#2124#2415#0" expanded="true" />
+                <element signature="e#2414#2415#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -204,16 +204,16 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ReviewEnvPresenter.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ReviewEnvPresenter.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ss174h/amsa/EnvCondition/ReviewEnvPresenter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="75" lean-forward="false" selection-start-line="21" selection-start-column="75" selection-end-line="21" selection-end-column="75" />
+            <state relative-caret-position="400">
+              <caret line="39" column="24" lean-forward="true" selection-start-line="39" selection-start-column="24" selection-end-line="39" selection-end-column="24" />
               <folding>
-                <element signature="e#269#270#0" expanded="true" />
-                <element signature="e#317#318#0" expanded="true" />
-                <element signature="e#608#609#0" expanded="true" />
-                <element signature="e#633#634#0" expanded="true" />
+                <element signature="e#295#296#0" expanded="true" />
+                <element signature="e#343#344#0" expanded="true" />
+                <element signature="e#1133#1134#0" expanded="true" />
+                <element signature="e#1162#1163#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1997,14 +1997,16 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_review_env.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/content_review_env.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ss174h/amsa/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ss174h/amsa/EnvCondition/ReviewEnv.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ss174h/amsa/EnvCondition/ReviewEnvPresenter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ss174h/amsa/EnvCondition/ReviewEnv.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="1280" />
-    <option name="height" value="800" />
+    <option name="x" value="-38" />
+    <option name="y" value="27" />
+    <option name="width" value="1049" />
+    <option name="height" value="742" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -2241,7 +2243,6 @@
     <property name="android.project.structure.last.selected" value="app" />
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="FullScreen" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -2339,7 +2340,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514881677797" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514883438044" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2387,7 +2388,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514881677797" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514883438044" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2570,7 +2571,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514881677798" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514883438044" />
       </method>
     </configuration>
     <list size="1">
@@ -2626,7 +2627,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <frame x="-38" y="27" width="1049" height="742" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -2649,7 +2650,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24878837" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.305859" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32994923" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32956383" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -2937,29 +2938,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ss174h/amsa/EnvCondition/ReviewEnv.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ss174h/amsa/EnvCondition/ReviewEnvPresenter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="605">
-          <caret line="70" column="38" lean-forward="false" selection-start-line="70" selection-start-column="38" selection-end-line="70" selection-end-column="38" />
+        <state relative-caret-position="400">
+          <caret line="39" column="24" lean-forward="true" selection-start-line="39" selection-start-column="24" selection-end-line="39" selection-end-column="24" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1686#1899#0" expanded="true" />
-            <element signature="e#1898#1899#0" expanded="true" />
-            <element signature="e#1949#2220#0" expanded="true" />
-            <element signature="e#2219#2220#0" expanded="true" />
+            <element signature="e#295#296#0" expanded="true" />
+            <element signature="e#343#344#0" expanded="true" />
+            <element signature="e#1133#1134#0" expanded="true" />
+            <element signature="e#1162#1163#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ss174h/amsa/EnvCondition/ReviewEnvPresenter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ss174h/amsa/EnvCondition/ReviewEnv.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="75" lean-forward="false" selection-start-line="21" selection-start-column="75" selection-end-line="21" selection-end-column="75" />
+        <state relative-caret-position="1050">
+          <caret line="73" column="9" lean-forward="false" selection-start-line="73" selection-start-column="9" selection-end-line="73" selection-end-column="9" />
           <folding>
-            <element signature="e#269#270#0" expanded="true" />
-            <element signature="e#317#318#0" expanded="true" />
-            <element signature="e#608#609#0" expanded="true" />
-            <element signature="e#633#634#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#1837#2070#0" expanded="true" />
+            <element signature="e#2069#2070#0" expanded="true" />
+            <element signature="e#2124#2415#0" expanded="true" />
+            <element signature="e#2414#2415#0" expanded="true" />
           </folding>
         </state>
       </provider>
