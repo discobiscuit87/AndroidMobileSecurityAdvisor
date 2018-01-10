@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.ss174h.amsa.APKScanner.APKScannerService;
 import com.ss174h.amsa.EnvCondition.ReviewEnv;
+import com.ss174h.amsa.RealTime.PackageHandler;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        PackageHandler packageHandler = new PackageHandler();
+        registerReceiver(packageHandler, filter);
 
         b1 = findViewById(R.id.scanApps);
         b1.setOnClickListener(new View.OnClickListener() {
