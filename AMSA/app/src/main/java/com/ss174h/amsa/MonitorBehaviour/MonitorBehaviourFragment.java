@@ -62,12 +62,18 @@ public class MonitorBehaviourFragment extends Fragment {
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		
-		// for the GUI created by Android studio 
+		// for the GUI created by Android studio
+
         View view = layoutInflater.inflate(R.layout.fragment_monitor_behaviour, container, false);
+
+
+        /*
         TextView textView = view.findViewById(R.id.fragment);
         TextView totalMemoryView = view.findViewById(R.id.totalmemoryfragment);
         TextView totalStorageView = view.findViewById(R.id.totalstoragefragment);
         TextView totalAppRunningView = view.findViewById(R.id.displaytotalappfragment);
+        */
+
 
 		//for the sideloaded apps 
         IntentFilter intentFilter = new IntentFilter(PROCESS_RESPONSE);
@@ -77,20 +83,9 @@ public class MonitorBehaviourFragment extends Fragment {
         AppReceiver appReceiver = new AppReceiver();
         getContext().registerReceiver(appReceiver, intentFilter);
 
-        //Test
-        //readUsage();
-        float test = getCpuPer();
-        Log.d("TEST ANDREW", String.valueOf(test));
 
-        ActivityManager am = (ActivityManager) getActivity().getSystemService(mContext.ACTIVITY_SERVICE);
 
-        ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
-        am.getMemoryInfo(memoryInfo);
-		// to get the total memory RAM of the phone 
-        Long totalMemory = memoryInfo.totalMem / (1024 * 1024); //In KB Form
 
-		// only displays one process 
-        //totalMemoryView.setText("Total Memory Size: " + totalMemory + "MB" + " Process Info Size: " + am.getRunningAppProcesses().size() + " Recent Tasks: " + recentTasks.size());
 
         return view;
 	}
