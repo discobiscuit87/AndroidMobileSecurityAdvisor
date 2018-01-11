@@ -50,6 +50,8 @@ public class ReviewEnv extends AppCompatActivity implements ParserResponseInterf
 
         String model = "ddff";
 
+        String gh = "sdsd";
+
         //new HtmlParser(this).execute("http://www.manutd.com/");
 
 
