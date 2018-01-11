@@ -55,6 +55,7 @@ public class ReviewEnv extends AppCompatActivity implements ParserResponseInterf
         //new HtmlParser(this).execute("https://developer.android.com/training/index.html");
 
         //Prompt for system update if current os version is not the latest
+
         if(reviewEnvPresenter.isOldAndroidVersion()==true)
         {
             // 1. Instantiate an AlertDialog.Builder with its constructor
