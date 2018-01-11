@@ -1,5 +1,7 @@
 package com.ss174h.amsa;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 
 import com.ss174h.amsa.APKScanner.APKScannerService;
 import com.ss174h.amsa.EnvCondition.ReviewEnv;
+import com.ss174h.amsa.MonitorBehaviour.MonitorBehaviourFragment;
 import com.ss174h.amsa.RealTime.PackageHandler;
 
 import java.util.ArrayList;
@@ -70,6 +73,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this,"Monitoring app behaviour",Toast.LENGTH_LONG).show();
+
+                MonitorBehaviourFragment fragment = new MonitorBehaviourFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.container, fragment, "Monitoring Behaviour");
+                fragmentTransaction.addToBackStack("Monitor");
+                fragmentTransaction.commit();
             }
         });
 
@@ -78,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this,"Monitoring app traffic",Toast.LENGTH_LONG).show();
+
+
+
             }
         });
 
