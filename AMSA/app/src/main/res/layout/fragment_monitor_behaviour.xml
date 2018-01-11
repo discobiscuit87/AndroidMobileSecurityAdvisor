@@ -42,11 +42,6 @@
             android:text="Total Storage Info"
             android:textColor="@color/white" />
 
-        <com.github.mikephil.charting.charts.Linechart
-            android:id="@+id/linechart"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"></com.github.mikephil.charting.charts.Linechart>
-
 
         <TextView
             android:id="@+id/totalmemoryfragment"
