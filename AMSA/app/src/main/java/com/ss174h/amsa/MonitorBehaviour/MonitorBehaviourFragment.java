@@ -41,6 +41,7 @@ import java.util.TreeMap;
 import static android.content.Context.ACTIVITY_SERVICE;
 
 
+//ddd
 public class MonitorBehaviourFragment extends Fragment {
     Context mContext;
     public static final String PROCESS_RESPONSE = "com.ss174h.app_scanner.intent.action.PROCESS_RESPONSE";
@@ -61,8 +62,8 @@ public class MonitorBehaviourFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		
-		// for the GUI created by Android studio
+
+        // for the GUI created by Android studio
 
         View view = layoutInflater.inflate(R.layout.fragment_monitor_behaviour, container, false);
 
@@ -75,7 +76,7 @@ public class MonitorBehaviourFragment extends Fragment {
         */
 
 
-		//for the sideloaded apps 
+        //for the sideloaded apps
         IntentFilter intentFilter = new IntentFilter(PROCESS_RESPONSE);
         intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
         Intent intent = new Intent(getContext(), APKScannerService.class);
@@ -88,10 +89,10 @@ public class MonitorBehaviourFragment extends Fragment {
 
 
         return view;
-	}
+    }
 
-	
-	//show the total RAM availableable 
+
+    //show the total RAM availableable
     public void displayTotalRAM() {
         String line;
         String[] tempStringArray;
@@ -113,7 +114,7 @@ public class MonitorBehaviourFragment extends Fragment {
         }
     }
 
-	//get the CPU percentage 
+    //get the CPU percentage
     public String getProcessCPU(String Process_name) {
         try {
             ArrayList<String> list2 = new ArrayList<String>();
@@ -130,7 +131,6 @@ public class MonitorBehaviourFragment extends Fragment {
             }
             p2.waitFor();
             for (int i=0 ;i<=list2.size();i++) {
-                if(list2.get(i).contains(Process_name)==true) {
                 if(list2.get(i).contains(Process_name)==true) {
                     a=list2.get(i).toString().split(" ");
                     break;
@@ -181,13 +181,13 @@ public class MonitorBehaviourFragment extends Fragment {
                     //Log.d("Eigth Line", tempLines[7]);
                     Log.d("Process Names", tempLines[8]);
 
-                    
+
 
                     //processIDLIst.add(new Process_ID(tempLines[1], tempLines[8]));
-					//log.d("Process ID",
+                    //log.d("Process ID",
                     noOfLines++; //To Know Number of Processes
                 }
-           }
+            }
 
 
             // read the output from the command
