@@ -136,6 +136,7 @@ public class MonitorBehaviourFragment extends Fragment {
             p2.waitFor();
             for (int i=0 ;i<=list2.size();i++) {
                 if(list2.get(i).contains(Process_name)==true) {
+                if(list2.get(i).contains(Process_name)==true) {
                     a=list2.get(i).toString().split(" ");
                     break;
                 }
