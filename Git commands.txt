@@ -1,0 +1,37 @@
+Library code
+
+
+https://github.com/hasancse91/android-web-scraping-app-jsoup/tree/master/WebScrapingbyJsoup-code/app/src/main
+
+git add .
+git commit -m "initial commit"
+git push origin master
+
+git pull origin master
+
+
+git reset f7823ab —-hard
+
+git mergetool
+
+https://github.com/hasancse91/android-web-scraping-app-jsoup/tree/master/WebScrapingbyJsoup-code/app/src/main
+
+http://supportrix.com/blog/tools-that-will-help-you-scan-apk-files-before-installing-them-on-your-android-device/#.WlgUWFT1WuU
+
+
+
+
+https://stackoverflow.com/questions/28262275/how-to-get-complete-path-and-name-of-each-file-in-download-directory-in-android
+
+https://stackoverflow.com/questions/3028306/download-a-file-with-android-and-showing-the-progress-in-a-progressdialog
+
+
+Monitor external storage
+
+——————————————————————————————————
+
+https://developer.android.com/reference/android/os/Environment.html#getExternalStorageDirectory()
+
+what is registerReceiver?
+
+https://developer.android.com/reference/android/content/Context.html#registerReceiver(android.content.BroadcastReceiver, android.content.IntentFilter)

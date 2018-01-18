@@ -113,7 +113,14 @@ public class ReviewEnv extends AppCompatActivity implements ParserResponseInterf
             Float androidNo = Float.parseFloat(versionNoText);
 
             Log.d("Float version num text",androidNo+"");
-            
+
+            Log.d("Current android ver",reviewEnvPresenter.getAndroidVersionNum()+"");
+
+            if(reviewEnvPresenter.getAndroidVersionNum()<androidNo)
+            {
+                String msg = "You may not have the latest version of android operating system" +
+                            " please go to settings "
+            }
 
             curVersionView.setText(currentAndroidVersion);
             latVersionView.setText(latestRelease);

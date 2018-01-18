@@ -24,6 +24,9 @@ public class ReviewEnvPresenter {
         this.reviewEnvPre = reviewEnvPre;
     }
 
+
+    //Returns android sdk and version number
+
     public String getAndroidVersion()
     {
         String release = Build.VERSION.RELEASE;
@@ -48,6 +51,17 @@ public class ReviewEnvPresenter {
             codeName = "Oreo";
 
         return "Android SDK: " + sdkVersion + " (Operating System Version: " + release + " " + codeName +")";
+    }
+
+    //Returns android version number e.g 6.1.0
+
+    public float getAndroidVersionNum()
+    {
+        String release = Build.VERSION.RELEASE;
+
+        float num = Float.parseFloat(release.substring(0,2));
+
+        return num;
     }
 
     public boolean isOldAndroidVersion()
