@@ -28,6 +28,8 @@ public class ReviewEnv extends AppCompatActivity implements ParserResponseInterf
     private ReviewEnvPresenter reviewEnvPresenter;
     private TextView curVersionView;
     private TextView latVersionView;
+    private TextView adviceView;
+
     //private String latestRelease;
     private String currentAndroidVersion;
     @Override
@@ -42,6 +44,7 @@ public class ReviewEnv extends AppCompatActivity implements ParserResponseInterf
 
         curVersionView = (TextView) findViewById(R.id.curVerText);
         latVersionView = (TextView) findViewById(R.id.latVerText);
+        adviceView = (TextView) findViewById(R.id.adviceText);
 
         //txtView.setText(currentAndroidVersion);
 
@@ -116,14 +119,45 @@ public class ReviewEnv extends AppCompatActivity implements ParserResponseInterf
 
             Log.d("Current android ver",reviewEnvPresenter.getAndroidVersionNum()+"");
 
+            String adviceMsg = "";
+
             if(reviewEnvPresenter.getAndroidVersionNum()<androidNo)
             {
-                String msg = "You may not have the latest version of android operating system" +
-                            " please go to settings ";
+                adviceMsg = "You may not have the latest version of android operating system for your device" +
+                            " please go to settings and check whether an update is available for you.";
+
+                Log.d("comparing version",adviceMsg);
+
+                String knownVulnerabilities = "";
+
+                if(reviewEnvPresenter.getAndroidVersionNum()<5.1)
+                {
+                    knownVulnerabilities = "You are running an out of date version of Android.  This version is known to have " +
+                            "vulnerabilities which can be exploited " +
+                            "via a single MMS message. Please check with your manufacturer for any updates.\n";
+                }
+
+                else if(reviewEnvPresenter.getAndroidVersionNum()<7)
+                {
+                   knownVulnerabilities = "You are running an out of date version of Android.  This version is known to have a " +
+                            "vulnerability that could lead to a DOS attack on your device. Please check with your manufacturer for any updates.  " +
+                            "Please note, the AMSA will not be compatible with Android 7.0 and later.";
+                }
+
+                adviceMsg = adviceMsg + "\n\n" + knownVulnerabilities;
             }
+
+            else
+            {
+                adviceMsg = "You have the latest operating system, no update is required ";
+            }
+
+
 
             curVersionView.setText(currentAndroidVersion);
             latVersionView.setText(latestRelease);
+            adviceView.setText(adviceMsg);
+
             //String latestRelease = articleModel.getArticle().substring(articleModel.getArticle().indexOf("Latest Release"),articleModel.getArticle().indexOf("Latest Release")+20);
             //txtView.setText(articleModel.getArticle());
 
