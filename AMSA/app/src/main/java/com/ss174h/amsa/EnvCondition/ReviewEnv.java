@@ -119,7 +119,7 @@ public class ReviewEnv extends AppCompatActivity implements ParserResponseInterf
             if(reviewEnvPresenter.getAndroidVersionNum()<androidNo)
             {
                 String msg = "You may not have the latest version of android operating system" +
-                            " please go to settings "
+                            " please go to settings ";
             }
 
             curVersionView.setText(currentAndroidVersion);
