@@ -21,4 +21,8 @@ public class ArticleModel {
     public String getArticle() {
         return article;
     }
+
+
+
+
 }

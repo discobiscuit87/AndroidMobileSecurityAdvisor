@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -35,7 +36,6 @@ public class ReviewEnv extends AppCompatActivity implements ParserResponseInterf
         setContentView(R.layout.activity_review_env);
 
         reviewEnvPresenter = new ReviewEnvPresenter(this);
-
         currentAndroidVersion = reviewEnvPresenter.getAndroidVersion();
 
         String phoneModel = reviewEnvPresenter.getDeviceName();
@@ -104,8 +104,17 @@ public class ReviewEnv extends AppCompatActivity implements ParserResponseInterf
         if(articleModel!=null){
            //txtView.setText(articleModel.getHeadline());
 
-
             String latestRelease = articleModel.getArticle();
+
+            String versionNoText = latestRelease.substring(0,3);
+
+            Log.d("Latest version num text",versionNoText);
+
+            Float androidNo = Float.parseFloat(versionNoText);
+
+            Log.d("Float version num text",androidNo+"");
+            
+
             curVersionView.setText(currentAndroidVersion);
             latVersionView.setText(latestRelease);
             //String latestRelease = articleModel.getArticle().substring(articleModel.getArticle().indexOf("Latest Release"),articleModel.getArticle().indexOf("Latest Release")+20);
