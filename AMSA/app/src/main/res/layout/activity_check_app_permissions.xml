@@ -82,8 +82,7 @@
             android:layout_alignParentTop="true"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="14pt"
-            android:text="Permissions"/>
+            android:textSize="14pt"/>
 
         <LinearLayout
             android:layout_width="match_parent"

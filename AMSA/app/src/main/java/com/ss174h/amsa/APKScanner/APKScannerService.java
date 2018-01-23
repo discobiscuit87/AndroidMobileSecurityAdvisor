@@ -19,9 +19,8 @@ import static android.content.pm.PackageManager.GET_SIGNATURES;
 public class APKScannerService extends IntentService {
 
     private PackageManager pm;
-    private static final int FLAGS = GET_PERMISSIONS | GET_SIGNATURES;
     private ArrayList<String> packages = new ArrayList<>();
-    public static final String PROCESS_RESPONSE = "com.ss174h.app_scanner.intent.action.PROCESS_RESPONSE";
+    public static final String PROCESS_RESPONSE = "com.ss174h.amsa.intent.action.PROCESS_RESPONSE";
 
     public APKScannerService() {
         super("APKScannerService");
@@ -40,13 +39,13 @@ public class APKScannerService extends IntentService {
 
         if(pName != null) {
             try {
-                PackageInfo packageInfo = this.pm.getPackageInfo(pName, FLAGS);
+                PackageInfo packageInfo = this.pm.getPackageInfo(pName, GET_SIGNATURES);
                 this.scan(packageInfo);
             } catch (PackageManager.NameNotFoundException e) {
                 Log.wtf("APKScannerService", "No such package: " + pName);
             }
         } else {
-            for (PackageInfo packageInfo : this.pm.getInstalledPackages(FLAGS)) {
+            for (PackageInfo packageInfo : this.pm.getInstalledPackages(GET_SIGNATURES)) {
                 this.scan(packageInfo);
             }
         }
@@ -58,28 +57,23 @@ public class APKScannerService extends IntentService {
         sendBroadcast(intent);
     }
 
-    private void scan(PackageInfo packageInfo) {
+    public void scan(PackageInfo packageInfo) {
         if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-            if (!this.fromGooglePlay(packageInfo.packageName) && !isAMSA(packageInfo.packageName)) {
+            if (!this.isSideloaded(packageInfo.packageName)) {
                 packages.add(packageInfo.packageName);
             }
         }
     }
-    //a function that checks that the package name is from a trusted authority
-    public boolean fromGooglePlay(String package_name) {
+
+    public boolean isSideloaded(String package_name) {
         String install_package_manager = this.pm.getInstallerPackageName(package_name);
 
         if (install_package_manager == null) return false;
 
-        else if (install_package_manager.equals("com.google.android.feedback") || install_package_manager.equals("com.android.vending")) {
+        else if (install_package_manager.equals("com.google.android.feedback") || install_package_manager.equals("com.android.vending") || package_name.equals("com.ss174h.amsa")) {
             return true;
         }
 
-        return false;
-    }
-
-    private boolean isAMSA(String package_name) {
-        if (package_name.equals("com.ss174h.amsa")) return true;
         return false;
     }
 }

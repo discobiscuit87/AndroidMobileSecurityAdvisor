@@ -76,6 +76,7 @@ public class ViewAppsActivity extends AppCompatActivity {
     public void onBackPressed() {
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        finish();
     }
 
     public void getAppInfo(PackageManager pm, ApplicationInfo appInfo) {
