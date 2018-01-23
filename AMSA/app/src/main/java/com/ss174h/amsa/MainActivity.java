@@ -28,6 +28,7 @@ import com.ss174h.amsa.APKScanner.APKScannerService;
 import com.ss174h.amsa.DetectNewAPK.MonitorDownloadFolder;
 import com.ss174h.amsa.DetectNewAPK.MyFileObserver;
 import com.ss174h.amsa.EnvCondition.ReviewEnv;
+import com.ss174h.amsa.MonitorBehaviour.MonitorActivity;
 import com.ss174h.amsa.MonitorBehaviour.MonitorBehaviourFragment;
 import com.ss174h.amsa.RealTime.PackageHandler;
 
@@ -35,7 +36,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -131,9 +131,13 @@ public class MainActivity extends AppCompatActivity {
         //File listAllFiles[] = downloadDir.listFiles();
         //File testF = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
+
+        /*uncomment later
+
         fileOb.startWatching();
         //Create file descriptor
         File storageDir = new File("/sdcard/Download");
+
 
         File listAllFiles[] = storageDir.listFiles();
 
@@ -150,6 +154,8 @@ public class MainActivity extends AppCompatActivity {
         {
             Log.i("Download Directory File",listAllFiles[i].getName());
         }
+
+        */
 
         //bytesIntoHumanReadable
 
@@ -193,12 +199,24 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this,"Monitoring app behaviour",Toast.LENGTH_LONG).show();
 
+
+                Intent intent = new Intent(getApplicationContext(), MonitorActivity.class);
+
+                startActivityForResult(intent,0);
+
+                // Intent intent = new Intent(getApplicationContext(), EnvInfo.class);
+
+                startActivity(intent);
+
+
+                /*
                 MonitorBehaviourFragment fragment = new MonitorBehaviourFragment();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.add(R.id.container, fragment, "Monitoring Behaviour");
                 fragmentTransaction.addToBackStack("Monitor");
                 fragmentTransaction.commit();
+                */
             }
         });
 
