@@ -33,11 +33,11 @@ public class ViewAppsActivity extends AppCompatActivity {
         packages = intent.getStringArrayListExtra("array");
         type = intent.getStringExtra("Check");
 
-        TextView t = findViewById(R.id.page_title);
+        TextView t = (TextView) findViewById(R.id.page_title);
         t.setText("Sideloaded Applications");
 
         AppAdapter appAdapter = new AppAdapter(this,packages);
-        final ListView listView = findViewById(R.id.list_view);
+        final ListView listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(appAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -31,7 +31,7 @@ public class CheckAppPermissionsActivity extends AppCompatActivity {
 
         try {
             Drawable icon = getPackageManager().getApplicationIcon(packName);
-            ImageView imageView = findViewById(R.id.app_icon);
+            ImageView imageView = (ImageView) findViewById(R.id.app_icon);
             imageView.setImageDrawable(icon);
         } catch (PackageManager.NameNotFoundException nnf) {
 
@@ -48,16 +48,16 @@ public class CheckAppPermissionsActivity extends AppCompatActivity {
 
         }
 
-        TextView t1 = findViewById(R.id.app_name);
+        TextView t1 = (TextView) findViewById(R.id.app_name);
         t1.setText(name);
 
-        TextView t2 = findViewById(R.id.version);
+        TextView t2 = (TextView) findViewById(R.id.version);
         t2.setText(version);
 
-        TextView t3 = findViewById(R.id.perms_info);
+        TextView t3 = (TextView) findViewById(R.id.perms_info);
         t3.setText(danger);
 
-        TextView t4 = findViewById(R.id.permissions);
+        TextView t4 = (TextView) findViewById(R.id.permissions);
         if(count == 0) {
             t4.setTextColor(getResources().getColor(R.color.goodColor));
             permissions = "This application contains no dangerous permissions";

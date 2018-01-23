@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
         //bytesIntoHumanReadable
 
-        b1 = findViewById(R.id.scanApps);
+        b1 = (Button) findViewById(R.id.scanApps);
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        b2 = findViewById(R.id.scanMalware);
+        b2 = (Button) findViewById(R.id.scanMalware);
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        b3 = findViewById(R.id.viewPermissions);
+        b3 = (Button) findViewById(R.id.viewPermissions);
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        b4 = findViewById(R.id.monitorBehaviour);
+        b4 = (Button) findViewById(R.id.monitorBehaviour);
         b4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        b5 = findViewById(R.id.reviewEnvironment);
+        b5 = (Button) findViewById(R.id.reviewEnvironment);
         b5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
