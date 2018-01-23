@@ -42,6 +42,8 @@ package="com.ss174h.amsa">
         android:label="@string/title_activity_review_env_presenter"
         android:theme="@style/AppTheme" />
 
+    <activity android:name=".MonitorBehaviour.MonitorActivity" />
+
     <service
         android:name="com.ss174h.amsa.DetectNewAPK.MonitorDownloadFolder"
         android:exported="false"></service>

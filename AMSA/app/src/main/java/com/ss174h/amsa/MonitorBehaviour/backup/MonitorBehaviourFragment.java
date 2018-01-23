@@ -45,10 +45,10 @@ import static android.content.Context.ACTIVITY_SERVICE;
 public class MonitorBehaviourFragment extends Fragment {
     Context mContext;
     public static final String PROCESS_RESPONSE = "com.ss174h.app_scanner.intent.action.PROCESS_RESPONSE";
-    private ArrayList<Process_ID> processIDLIst;
+    private ArrayList<com.ss174h.amsa.MonitorBehaviour.Process_ID> processIDLIst;
 
     public MonitorBehaviourFragment() {
-        processIDLIst = new ArrayList<Process_ID>();
+        processIDLIst = new ArrayList<com.ss174h.amsa.MonitorBehaviour.Process_ID>();
     }
 
     @Override
