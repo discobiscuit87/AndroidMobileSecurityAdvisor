@@ -65,8 +65,8 @@ public class APKScannerService extends IntentService {
             }
         }
     }
-
-    private boolean fromGooglePlay(String package_name) {
+    //a function that checks that the package name is from a trusted authority
+    public boolean fromGooglePlay(String package_name) {
         String install_package_manager = this.pm.getInstallerPackageName(package_name);
 
         if (install_package_manager == null) return false;
