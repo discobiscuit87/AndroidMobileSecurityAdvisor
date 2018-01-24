@@ -18,6 +18,7 @@
 package com.ss174h.amsa.MonitorBehaviour;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -44,11 +45,15 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ProcessInfoDialog extends DialogFragment {
 
@@ -85,7 +90,9 @@ public class ProcessInfoDialog extends DialogFragment {
         .create();
   }
     //show the total RAM availableable
-    public Long totalRAM() {
+    public String totalRAM() {
+
+      /*
         String line;
         String[] tempStringArray;
         Long totalMemory=0L;
@@ -105,8 +112,61 @@ public class ProcessInfoDialog extends DialogFragment {
         catch (IOException e) {
             e.printStackTrace();
         }
+        */
+      /*
+        ActivityManager actManager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
+        actManager.getMemoryInfo(memInfo);
+        //long totalMemory = memInfo.totalMem;
 
-        return (totalMemory/1024);
+        return (memInfo.totalMem/1024/1024/1024);
+        */
+        RandomAccessFile reader = null;
+        String load = null;
+        DecimalFormat twoDecimalForm = new DecimalFormat("#.##");
+        double totRam = 0;
+        String lastValue = "";
+        try {
+            reader = new RandomAccessFile("/proc/meminfo", "r");
+            load = reader.readLine();
+
+            // Get the Number value from the string
+            Pattern p = Pattern.compile("(\\d+)");
+            Matcher m = p.matcher(load);
+            String value = "";
+            while (m.find()) {
+                value = m.group(1);
+                // System.out.println("Ram : " + value);
+            }
+            reader.close();
+
+            totRam = Double.parseDouble(value);
+            // totRam = totRam / 1024;
+
+            double mb = totRam / 1024.0;
+            double gb = totRam / 1048576.0;
+            double tb = totRam / 1073741824.0;
+
+            if (tb > 1) {
+                lastValue = twoDecimalForm.format(tb).concat(" TB");
+            } else if (gb > 1) {
+                lastValue = twoDecimalForm.format(gb).concat(" GB");
+            } else if (mb > 1) {
+                lastValue = twoDecimalForm.format(mb).concat(" MB");
+            } else {
+                lastValue = twoDecimalForm.format(totRam).concat(" KB");
+            }
+
+
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            // Streams.close(reader);
+        }
+
+        return lastValue;
+
     }
 
   private Spanned getProcessInfo(AndroidAppProcess process) {
@@ -156,8 +216,8 @@ public class ProcessInfoDialog extends DialogFragment {
       Statm statm = process.statm();
      // html.p().strong("SIZE: ").append(Formatter.formatFileSize(getActivity(), statm.getSize())).close();
       html.p().strong("Size of App in RAM: ").append(Formatter.formatFileSize(getActivity(), statm.getResidentSetSize())).close();
-      html.p().strong("TOTAL RAM2: ").append(Formatter.formatFileSize(getActivity(), totalRAM())).close();
-      //html.p().strong("TOTAL RAM: ").append(totalRAM()).close();
+      //html.p().strong("TOTAL RAM2: ").append(Formatter.formatFileSize(getActivity(), totalRAM())).close();
+      html.p().strong("TOTAL RAM: ").append(totalRAM()).close();
     } catch (IOException e) {
       Log.d(TAG, String.format("Error reading /proc/%d/statm.", process.pid));
     }
