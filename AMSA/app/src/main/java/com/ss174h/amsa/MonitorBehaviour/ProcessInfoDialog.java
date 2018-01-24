@@ -51,11 +51,16 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class ProcessInfoDialog extends DialogFragment {
+
+    //Wiping Cache, Clearing all Settings, Basically Starting all Over Again If Cleaned
     public String printDataSize = "";
+
+    //Cache Size (Stuff Loaded Once App is Used or Launched..)
     public String printCacheSize = "";
+
+    //APK Size
     public String printAPKSize = "";
-    public String printPackageSize = "";
-    long packageSize = 0;
+
     AppDetails cAppDetails;
     public ArrayList<AppDetails.PackageInfoStruct> packagesList;
 
@@ -64,7 +69,9 @@ public class ProcessInfoDialog extends DialogFragment {
 
   @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     AndroidAppProcess process = getArguments().getParcelable("process");
-      getpackageSize(process.getPackageName(), getContext());
+
+    //Get Package Size
+      getpackageSize(process.getPackageName(), getActivity());
 
       return new AlertDialog.Builder(getActivity())
         .setTitle(Utils.getName(getActivity(), process))
@@ -104,14 +111,13 @@ public class ProcessInfoDialog extends DialogFragment {
 
   private Spanned getProcessInfo(AndroidAppProcess process) {
 
-      getpackageSize(process.getPackageName(), getContext());
+      getpackageSize(process.getPackageName(), getActivity());
       HtmlBuilder html = new HtmlBuilder();
 
     html.p().strong("NAME: ").append(process.name).close();
     html.p().strong("DATA SIZE: ").append(printDataSize).close();
     html.p().strong("CACHE SIZE: ").append(printCacheSize).close();
     html.p().strong("APK SIZE: ").append(printAPKSize).close();
-    html.p().strong("PACKAGE SIZE: ").append(printPackageSize).close();
     html.p().strong("POLICY: ").append(process.foreground ? "foreground process" : "background process").close();
     html.p().strong("PID: ").append(process.pid).close();
 
@@ -211,20 +217,15 @@ public class ProcessInfoDialog extends DialogFragment {
         String cacheSizeNo = Formatter.formatFileSize(getContext(), pStats.cacheSize);
         String dataSizeNo = Formatter.formatFileSize(getContext(), pStats.dataSize);
         String APKSizeNo = Formatter.formatFileSize(getContext(), pStats.codeSize);
-        String packageSizeNo = Formatter.formatFileSize(getContext(), pStats.dataSize + pStats.cacheSize);
         String packageName = pStats.packageName;
 
         printDataSize = dataSizeNo;
         printCacheSize = cacheSizeNo;
         printAPKSize = APKSizeNo;
-        printPackageSize = packageSizeNo;
-
 
         Log.d("PACKAGE NAME", packageName);
         Log.d("CACHE SIZE", cacheSizeNo);
         Log.d("DATA SIZE", dataSizeNo);
         Log.d("APK SIZE", APKSizeNo);
-        Log.d("PACKAGE SIZE", packageSizeNo);
-
     }
 }
