@@ -17,13 +17,21 @@
 
 package com.ss174h.amsa.MonitorBehaviour;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.os.SystemClock;
+import android.support.annotation.RequiresApi;
 import android.text.Spanned;
+import android.content.pm.IPackageStatsObserver;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageStats;
 import android.text.format.Formatter;
 import android.util.Log;
 import com.jaredrummler.android.processes.models.AndroidAppProcess;
@@ -36,16 +44,29 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class ProcessInfoDialog extends DialogFragment {
+    public String printDataSize = "";
+    public String printCacheSize = "";
+    public String printAPKSize = "";
+    public String printPackageSize = "";
+    long packageSize = 0;
+    AppDetails cAppDetails;
+    public ArrayList<AppDetails.PackageInfoStruct> packagesList;
 
-  private static final String TAG = "ProcessInfoDialog";
+
+    private static final String TAG = "ProcessInfoDialog";
 
   @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     AndroidAppProcess process = getArguments().getParcelable("process");
-    return new AlertDialog.Builder(getActivity())
+      getpackageSize(process.getPackageName(), getContext());
+
+      return new AlertDialog.Builder(getActivity())
         .setTitle(Utils.getName(getActivity(), process))
         .setMessage(getProcessInfo(process))
         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -82,9 +103,15 @@ public class ProcessInfoDialog extends DialogFragment {
     }
 
   private Spanned getProcessInfo(AndroidAppProcess process) {
-    HtmlBuilder html = new HtmlBuilder();
+
+      getpackageSize(process.getPackageName(), getContext());
+      HtmlBuilder html = new HtmlBuilder();
 
     html.p().strong("NAME: ").append(process.name).close();
+    html.p().strong("DATA SIZE: ").append(printDataSize).close();
+    html.p().strong("CACHE SIZE: ").append(printCacheSize).close();
+    html.p().strong("APK SIZE: ").append(printAPKSize).close();
+    html.p().strong("PACKAGE SIZE: ").append(printPackageSize).close();
     html.p().strong("POLICY: ").append(process.foreground ? "foreground process" : "background process").close();
     html.p().strong("PID: ").append(process.pid).close();
 
@@ -132,4 +159,72 @@ public class ProcessInfoDialog extends DialogFragment {
 
     return html.build();
   }
+
+    public void getpackageSize(String pckgName, Context context) {
+        cAppDetails = new AppDetails((Activity) context);
+        packagesList = cAppDetails.getPackages();
+
+        // Create Object to Access Package Manager
+        PackageManager pm = context.getPackageManager();
+        Method getPackageSizeInfo;
+        String test = "";
+
+        try {
+            getPackageSizeInfo = pm.getClass().getMethod(
+                    "getPackageSizeInfo", String.class,
+                    IPackageStatsObserver.class);
+
+            //Get Package List of Name, PName =
+            getPackageSizeInfo.invoke(pm, pckgName,
+                    new cachePackState());
+        }
+        catch (SecurityException e) {
+            e.printStackTrace();
+        }
+        catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private class cachePackState extends IPackageStatsObserver.Stub {
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        public void onGetStatsCompleted(PackageStats pStats, boolean succeeded)
+                throws RemoteException {
+            displayStatsMB(pStats);
+        }
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void displayStatsMB(PackageStats pStats) {
+        String cacheSizeNo = Formatter.formatFileSize(getContext(), pStats.cacheSize);
+        String dataSizeNo = Formatter.formatFileSize(getContext(), pStats.dataSize);
+        String APKSizeNo = Formatter.formatFileSize(getContext(), pStats.codeSize);
+        String packageSizeNo = Formatter.formatFileSize(getContext(), pStats.dataSize + pStats.cacheSize);
+        String packageName = pStats.packageName;
+
+        printDataSize = dataSizeNo;
+        printCacheSize = cacheSizeNo;
+        printAPKSize = APKSizeNo;
+        printPackageSize = packageSizeNo;
+
+
+        Log.d("PACKAGE NAME", packageName);
+        Log.d("CACHE SIZE", cacheSizeNo);
+        Log.d("DATA SIZE", dataSizeNo);
+        Log.d("APK SIZE", APKSizeNo);
+        Log.d("PACKAGE SIZE", packageSizeNo);
+
+    }
 }
