@@ -31,4 +31,10 @@ public class MonitorActivity extends Activity {
     }
   }
 
+  @Override
+  public void onBackPressed() {
+      super.onBackPressed();
+      finish();
+  }
+
 }

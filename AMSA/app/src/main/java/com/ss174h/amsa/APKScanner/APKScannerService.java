@@ -70,7 +70,8 @@ public class APKScannerService extends IntentService {
 
         if (install_package_manager == null) return false;
 
-        else if (install_package_manager.equals("com.google.android.feedback") || install_package_manager.equals("com.android.vending") || package_name.equals("com.ss174h.amsa")) {
+        else if (install_package_manager.equals("com.google.android.feedback") || install_package_manager.equals("com.android.vending")
+                || package_name.equals("com.ss174h.amsa")) {
             return true;
         }
 

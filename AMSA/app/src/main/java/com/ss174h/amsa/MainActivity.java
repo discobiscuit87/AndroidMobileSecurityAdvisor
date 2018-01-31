@@ -1,11 +1,14 @@
 package com.ss174h.amsa;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,10 +19,10 @@ import android.widget.Toast;
 import com.ss174h.amsa.APKScanner.APKScannerService;
 import com.ss174h.amsa.DetectNewAPK.MyFileObserver;
 import com.ss174h.amsa.MalwareScanner.ScanMalwareActivity;
-import com.ss174h.amsa.RealTime.PackageHandler;
 import com.ss174h.amsa.MonitorBehaviour.MonitorActivity;
 import com.ss174h.amsa.EnvCondition.ReviewEnv;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,17 +31,12 @@ public class MainActivity extends AppCompatActivity {
     public static final String PROCESS_RESPONSE = "com.ss174h.amsa.intent.action.PROCESS_RESPONSE";
     private ArrayList<String> array;
     private APKReceiver apkReceiver;
-    private PermissionsReceiver permissionsReceiver;
-    private MalwareReceiver malwareReceiver;
-
-    BroadcastReceiver mExternalStorageReceiver;
-    boolean mExternalStorageAvailable = false;
-    boolean mExternalStorageWriteable = false;
+    private SDReceiver sdReceiver;
 
     //This path contains all the files downloaded by user
-    private String downloadPath ="/sdcard/Download";
+    private String downloadPath = "/sdcard/Download";
 
-    MyFileObserver fileOb = new MyFileObserver("/sdcard/Download");
+    MyFileObserver fileOb = new MyFileObserver(downloadPath,MainActivity.this);
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -47,83 +45,25 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.GET_ACCOUNTS_PRIVILEGED
     };
 
-    //Add code launch service
-    //Intent msgIntent = new Intent(this, MonitorDownloadFolder.class);
-
-    void updateExternalStorageState() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            mExternalStorageAvailable = mExternalStorageWriteable = true;
-        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            mExternalStorageAvailable = true;
-            mExternalStorageWriteable = false;
-        } else {
-            mExternalStorageAvailable = mExternalStorageWriteable = false;
-        }
-    }
-
-    void startWatchingExternalStorage() {
-        mExternalStorageReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.i("test", "Storage: " + intent.getData());
-                updateExternalStorageState();
-            }
-        };
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
-        filter.addAction(Intent.ACTION_MEDIA_REMOVED);
-        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
-
-        registerReceiver(mExternalStorageReceiver, filter);
-        updateExternalStorageState();
-
-    }
-
-    void stopWatchingExternalStorage() {
-        unregisterReceiver(mExternalStorageReceiver);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
-        PackageHandler packageHandler = new PackageHandler();
-        registerReceiver(packageHandler, filter);
+        IntentFilter intentFilter = new IntentFilter(PROCESS_RESPONSE);
+        intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        Intent intent = new Intent(this, APKScannerService.class);
+        startService(intent);
+        apkReceiver = new APKReceiver();
+        registerReceiver(apkReceiver, intentFilter);
+        IntentFilter intentFilter1 = new IntentFilter();
+        intentFilter1.addCategory(Intent.ACTION_MEDIA_MOUNTED);
+        sdReceiver = new SDReceiver();
+        registerReceiver(sdReceiver,intentFilter1);
 
-        //get all apk files
-        /*
-        PackageManager pm=getPackageManager();
-        List<String > pkg_path = new ArrayList<String>();
-        List<PackageInfo> pkginfo_list = pm.getInstalledPackages(PackageManager.GET_ACTIVITIES);
-        List<ApplicationInfo> appinfo_list = pm.getInstalledApplications(0);
-
-        for (int x=0; x < pkginfo_list.size(); x++)
-        {
-            PackageInfo pkginfo = pkginfo_list.get(x);
-            pkg_path.add(appinfo_list.get(x).publicSourceDir);  //store package path in array
-
-            Log.i("package path = " , pkg_path.get(x) + "");
-            File tx = new File(pkg_path.get(x)+"");
-
-            //Log.i("Application info",pkginfo_list.get(x).applicationInfo + "");
-            Log.i("total space taken up",tx.getTotalSpace() + "");
-
-        }
-        */
-
-        //File listAllFiles[] = downloadDir.listFiles();
-        //File testF = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-
-
-        /*uncomment later
-
-        fileOb.startWatching();
         //Create file descriptor
+        verifyStoragePermissions(this);
+
         File storageDir = new File("/sdcard/Download");
 
 
@@ -134,8 +74,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Path name",storageDir.getPath());
         Log.d("isExtStorageAvail", Environment.getExternalStorageState());
 
-        verifyStoragePermissions(this);
-
         //listAllFiles.
 
         for(int i=0;i<listAllFiles.length;i++)
@@ -143,20 +81,17 @@ public class MainActivity extends AppCompatActivity {
             Log.i("Download Directory File",listAllFiles[i].getName());
         }
 
-        */
 
-        //bytesIntoHumanReadable
+        fileOb.startWatching();
 
         b1 = (Button) findViewById(R.id.scanApps);
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentFilter intentFilter = new IntentFilter(PROCESS_RESPONSE);
-                intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
-                Intent intent = new Intent(v.getContext(), APKScannerService.class);
-                v.getContext().startService(intent);
-                apkReceiver = new APKReceiver();
-                v.getContext().registerReceiver(apkReceiver, intentFilter);
+                Intent appIntent = new Intent(v.getContext(), ViewAppsActivity.class);
+                appIntent.putStringArrayListExtra("array",array);
+                appIntent.putExtra("Check","CheckCerts");
+                v.getContext().startActivity(appIntent);
             }
         });
 
@@ -164,12 +99,9 @@ public class MainActivity extends AppCompatActivity {
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentFilter intentFilter = new IntentFilter(PROCESS_RESPONSE);
-                intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
-                Intent intent = new Intent(v.getContext(), APKScannerService.class);
-                v.getContext().startService(intent);
-                malwareReceiver = new MalwareReceiver();
-                v.getContext().registerReceiver(malwareReceiver, intentFilter);
+                Intent appIntent = new Intent(v.getContext(), ScanMalwareActivity.class);
+                appIntent.putStringArrayListExtra("array",array);
+                v.getContext().startActivity(appIntent);
             }
         });
 
@@ -177,12 +109,10 @@ public class MainActivity extends AppCompatActivity {
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentFilter intentFilter = new IntentFilter(PROCESS_RESPONSE);
-                intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
-                Intent intent = new Intent(v.getContext(), APKScannerService.class);
-                v.getContext().startService(intent);
-                permissionsReceiver = new PermissionsReceiver();
-                v.getContext().registerReceiver(permissionsReceiver, intentFilter);
+                Intent appIntent = new Intent(v.getContext(), ViewAppsActivity.class);
+                appIntent.putStringArrayListExtra("array",array);
+                appIntent.putExtra("Check","CheckPerms");
+                v.getContext().startActivity(appIntent);
             }
         });
 
@@ -214,6 +144,44 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(apkReceiver);
+        unregisterReceiver(sdReceiver);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter(PROCESS_RESPONSE);
+        intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(apkReceiver, intentFilter);
+        IntentFilter intentFilter1 = new IntentFilter();
+        intentFilter1.addCategory(Intent.ACTION_MEDIA_MOUNTED);
+        registerReceiver(sdReceiver,intentFilter1);
+        verifyStoragePermissions(this);
+
+        File storageDir = new File("/sdcard/Download");
+
+
+        File listAllFiles[] = storageDir.listFiles();
+
+        Log.d("isDirectory", "true");
+        Log.d("App can access",storageDir.canRead()+"");
+        Log.d("Path name",storageDir.getPath());
+        Log.d("isExtStorageAvail", Environment.getExternalStorageState());
+
+        //listAllFiles.
+
+        for(int i=0;i<listAllFiles.length;i++)
+        {
+            Log.i("Download Directory File",listAllFiles[i].getName());
+        }
+        fileOb.startWatching();
+    }
+
+    //To receive the populated arrayList from the scanner service
     public class APKReceiver extends BroadcastReceiver {
 
         @Override
@@ -223,47 +191,38 @@ public class MainActivity extends AppCompatActivity {
 
             if(array.isEmpty()) {
                 Toast.makeText(context, "No sideloaded applications installed!", Toast.LENGTH_LONG).show();
-            } else {
-                Intent appIntent = new Intent(context, ViewAppsActivity.class);
-                appIntent.putStringArrayListExtra("array",array);
-                appIntent.putExtra("Check","CheckCerts");
-                context.startActivity(appIntent);
             }
         }
     }
 
-    public class PermissionsReceiver extends BroadcastReceiver {
+    public class SDReceiver extends BroadcastReceiver {
+
+        String name;
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
-            array = intent.getStringArrayListExtra("array");
-
-            if(array.isEmpty()) {
-                Toast.makeText(context, "No sideloaded applications installed!", Toast.LENGTH_LONG).show();
-            } else {
-                Intent appIntent = new Intent(context, ViewAppsActivity.class);
-                appIntent.putStringArrayListExtra("array",array);
-                appIntent.putExtra("Check","CheckPerms");
-                context.startActivity(appIntent);
+            File sdCardRoot = Environment.getExternalStorageDirectory();
+            File yourDir = new File(sdCardRoot, "/Download");
+            for (File f : yourDir.listFiles()) {
+                if (f.isFile())
+                    name = f.getName();
+                    Log.e("Name", name);
             }
         }
     }
 
-    public class MalwareReceiver extends BroadcastReceiver {
+    //For application to get access to all apk files in download directory
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            array = intent.getStringArrayListExtra("array");
-
-            if(array.isEmpty()) {
-                Toast.makeText(context, "No sideloaded applications installed!", Toast.LENGTH_LONG).show();
-            } else {
-                Intent appIntent = new Intent(context, ScanMalwareActivity.class);
-                appIntent.putStringArrayListExtra("array",array);
-                context.startActivity(appIntent);
-            }
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
         }
     }
 }

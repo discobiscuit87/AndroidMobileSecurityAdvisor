@@ -134,11 +134,26 @@ public class AndroidAppProcess extends AndroidProcess {
     return context.getPackageManager().getPackageInfo(getPackageName(), flags);
   }
 
+  //check if it's a side loaded app
+  public boolean isSideLoaded(Context context, String package_name){
+    String install_package_manager = context.getPackageManager().getInstallerPackageName(package_name);
+
+    if (install_package_manager == null) return false;
+
+    else if (install_package_manager.equals("com.google.android.feedback") || install_package_manager.equals("com.android.vending") || package_name.equals("com.ss174h.amsa")) {
+      return true;
+    }
+
+    return false;
+  }
+
+
   @Override public void writeToParcel(Parcel dest, int flags) {
     super.writeToParcel(dest, flags);
     dest.writeByte((byte) (foreground ? 0x01 : 0x00));
     dest.writeInt(uid);
   }
+
 
   public static final Creator<AndroidAppProcess> CREATOR = new Creator<AndroidAppProcess>() {
 

@@ -1,7 +1,33 @@
 package com.ss174h.amsa.DetectNewAPK;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.FileObserver;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import com.ss174h.amsa.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 /**
  * Created by jianwen on 16/1/18.
@@ -10,10 +36,14 @@ import android.util.Log;
 public class MyFileObserver extends FileObserver {
 
     public String absolutePath;
+    private Context context;
+    private ArrayList<String> score;
 
-    public MyFileObserver(String path) {
+
+    public MyFileObserver(String path, Context con) {
         super(path, FileObserver.ALL_EVENTS);
-        absolutePath = path;
+        this.absolutePath = path;
+        this.context = con;
     }
 
     @Override
@@ -29,13 +59,43 @@ public class MyFileObserver extends FileObserver {
             Log.i("path dsds", path);
 
             String filename = path.toLowerCase();
+            score = new ArrayList<>();
 
-            if(filename.toLowerCase().contains("apk") || filename.toLowerCase().contains("APK")) {
+            if(filename.toLowerCase().contains("apk") && !filename.toLowerCase().contains("crdownload")) {
                 Log.i("DETECTED", "An apk file is being downloaded");
+                File apk = new File("/sdcard/Download/"+path);
+                String[] out = new String[1];
 
+                try {
+                    MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+                    InputStream inputStream = new FileInputStream(apk);
+
+                    byte[] buffer = new byte[8192];
+                    int read;
+                    try {
+                        while ((read = inputStream.read(buffer)) > 0) {
+                            messageDigest.update(buffer, 0, read);
+                        }
+                        byte[] bytes = messageDigest.digest();
+                        BigInteger bigInteger = new BigInteger(1, bytes);
+                        String output = bigInteger.toString(16);
+                        out[0] = output;
+                        new GetData().execute(out);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Unable to process file for SHA-256");
+                    } finally {
+                        try {
+                            inputStream.close();
+                        } catch (IOException e) {
+                            Log.e("Error: ", "Exception on closing input stream!");
+                        }
+                    }
+                } catch (NoSuchAlgorithmException nsa) {
+                    Log.e("Error: ", "No such algorithm!");
+                } catch (FileNotFoundException fnf) {
+                    Log.e("Error: ", "File not found!");
+                }
             }
-
-
 
         }
         //a file or directory was opened
@@ -95,6 +155,76 @@ public class MyFileObserver extends FileObserver {
         if ((FileObserver.ATTRIB & event)!=0) {
             Log.i("Downloaded", "Metadata (permissions, owner, timestamp) was changed explicitly");
             //FileAccessLogStatic.accessLogMsg += absolutePath + "/" + path + " is changed (permissions, owner, timestamp)n";
+        }
+    }
+
+    private class GetData extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... arg0) {
+            String line;
+            String positives;
+            String responseCode;
+            String api = "a4c4c0eac6eef58293c39ee8db121802f586ac520360bd5a24bec8e93cf157c8";
+
+            String address = "https://www.virustotal.com/vtapi/v2/file/report?apikey=" + api + "&resource=" + arg0[0];
+            try {
+                URL url = new URL(address);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+
+                InputStream in = new BufferedInputStream(connection.getInputStream());
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+                StringBuilder sb = new StringBuilder();
+                while ((line = bufferedReader.readLine()) != null) {
+                    sb.append(line).append("\n");
+                }
+                String response = sb.toString();
+
+                JSONObject jsonObject = new JSONObject(response);
+                responseCode = jsonObject.getString("response_code");
+                if(!responseCode.equals("0")) {
+                    positives = jsonObject.getString("positives");
+                    score.add(positives);
+                } else {
+                    positives = "-1";
+                    score.add(positives);
+                }
+            } catch (MalformedURLException e) {
+                Log.e("Error", "Malformed URL Exception");
+            } catch (IOException io) {
+                Log.e("Error: ", "IO Exception");
+            } catch (JSONException jso) {
+                Log.e("Error: ", "JSON Exception");
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "M_CH_ID");
+            mBuilder.setAutoCancel(true)
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setWhen(System.currentTimeMillis())
+                    .setSmallIcon(R.drawable.logo)
+                    .setPriority(Notification.PRIORITY_MAX)
+                    .setContentTitle("Malware Check");
+
+            if(score.get(0).equals("0")) {
+                mBuilder.setTicker("Downloaded file is clear of malware!");
+                mBuilder.setContentText("Downloaded file is clear of malware!");
+            } else if(score.get(0).equals("-1")) {
+                mBuilder.setTicker("Downloaded file is not in database, proceed with caution!");
+                mBuilder.setContentText("Downloaded file is not in database, proceed with caution!");
+            } else {
+                mBuilder.setTicker("Downloaded file contains malware, do not install!");
+                mBuilder.setContentText("Downloaded file contains malware, do not install!");
+            }
+
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(1, mBuilder.build());
         }
     }
 }

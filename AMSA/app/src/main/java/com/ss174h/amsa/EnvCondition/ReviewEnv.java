@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ss174h.amsa.MainActivity;
 import com.ss174h.amsa.R;
 
 import org.json.JSONObject;
@@ -132,14 +133,14 @@ public class ReviewEnv extends AppCompatActivity implements ParserResponseInterf
 
                 if(reviewEnvPresenter.getAndroidVersionNum()<5.1)
                 {
-                    knownVulnerabilities = "You are running an out of date version of Android.  This version is known to have " +
+                    knownVulnerabilities = "This version is known to have " +
                             "vulnerabilities which can be exploited " +
                             "via a single MMS message. Please check with your manufacturer for any updates.\n";
                 }
 
                 else if(reviewEnvPresenter.getAndroidVersionNum()<7)
                 {
-                   knownVulnerabilities = "You are running an out of date version of Android.  This version is known to have a " +
+                   knownVulnerabilities = "This version is known to have a " +
                             "vulnerability that could lead to a DOS attack on your device. Please check with your manufacturer for any updates.  " +
                             "Please note, the AMSA will not be compatible with Android 7.0 and later.";
                 }
@@ -165,5 +166,11 @@ public class ReviewEnv extends AppCompatActivity implements ParserResponseInterf
         }
         else
             curVersionView.setText("Something wrong! Can't parse HTML");
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

@@ -210,7 +210,7 @@ public class AndroidProcesses {
   /**
    * @return a list of all running app processes on the device.
    */
-  public static List<AndroidAppProcess> getRunningAppProcesses() {
+  public static List<AndroidAppProcess> getRunningAppProcesses(Context context) {
     List<AndroidAppProcess> processes = new ArrayList<>();
     File[] files = new File("/proc").listFiles();
     for (File file : files) {
@@ -222,7 +222,9 @@ public class AndroidProcesses {
           continue;
         }
         try {
-          processes.add(new AndroidAppProcess(pid));
+          AndroidAppProcess aap = new AndroidAppProcess(pid);
+          if (aap.isSideLoaded(context, aap.getPackageName())==false)
+            processes.add(aap);
         } catch (AndroidAppProcess.NotAndroidAppProcessException ignored) {
         } catch (IOException e) {
           log(e, "Error reading from /proc/%d.", pid);
@@ -298,7 +300,7 @@ public class AndroidProcesses {
    * {@link RunningAppProcessInfo#importanceReasonComponent},
    * {@link RunningAppProcessInfo#importanceReasonPid},
    * etc. If you need more process information try using
-   * {@link #getRunningAppProcesses()} or {@link android.app.usage.UsageStatsManager}</p>
+   * {link #getRunningAppProcesses()} or {@link android.app.usage.UsageStatsManager}</p>
    *
    * @param context
    *     the application context
@@ -308,7 +310,7 @@ public class AndroidProcesses {
    */
   public static List<RunningAppProcessInfo> getRunningAppProcessInfo(Context context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-      List<AndroidAppProcess> runningAppProcesses = AndroidProcesses.getRunningAppProcesses();
+      List<AndroidAppProcess> runningAppProcesses = AndroidProcesses.getRunningAppProcesses(context);
       List<RunningAppProcessInfo> appProcessInfos = new ArrayList<>();
       for (AndroidAppProcess process : runningAppProcesses) {
         RunningAppProcessInfo info = new RunningAppProcessInfo(process.name, process.pid, null);

@@ -18,6 +18,7 @@
 package com.ss174h.amsa.MonitorBehaviour;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import com.jaredrummler.android.processes.models.AndroidAppProcess;
 import com.squareup.picasso.Picasso;
 import com.ss174h.amsa.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.ss174h.amsa.MonitorBehaviour.AppIconRequestHandler.SCHEME_PNAME;
@@ -42,14 +44,25 @@ public class ProcessListAdapter extends BaseAdapter {
   private final Context context;
   private final Picasso picasso;
   private final int iconSize;
+  //private PackageManager pm;
 
   public ProcessListAdapter(Context context, List<AndroidAppProcess> processes) {
     this.context = context.getApplicationContext();
     this.inflater = LayoutInflater.from(context);
     this.iconSize = Utils.toPx(context, 46);
     this.picasso = Picasso.with(context);
+    //pm = context.getPackageManager();
+
+
+    //this.processes = new ArrayList<AndroidAppProcess>();
+    //for (AndroidAppProcess p : processes) {
+     //  if (isSideloaded(p.getPackageName())==true){
+     //    this.processes.add(p);
+     //  }
+    //}
     this.processes = processes;
   }
+
 
   @Override public int getCount() {
     return processes.size();

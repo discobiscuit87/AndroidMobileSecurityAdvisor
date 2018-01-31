@@ -38,7 +38,7 @@ public class AndroidAppProcessLoader extends AsyncTask<Void, Void, List<AndroidA
   }
 
   @Override protected List<AndroidAppProcess> doInBackground(Void... params) {
-    List<AndroidAppProcess> processes = AndroidProcesses.getRunningAppProcesses();
+    List<AndroidAppProcess> processes = AndroidProcesses.getRunningAppProcesses(context);
 
     // sort by app name
     Collections.sort(processes, new Comparator<AndroidAppProcess>() {

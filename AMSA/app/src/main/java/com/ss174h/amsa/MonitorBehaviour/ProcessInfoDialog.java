@@ -57,26 +57,11 @@ import java.util.regex.Pattern;
 
 public class ProcessInfoDialog extends DialogFragment {
 
-    //Wiping Cache, Clearing all Settings, Basically Starting all Over Again If Cleaned
-    public String printDataSize = "";
-
-    //Cache Size (Stuff Loaded Once App is Used or Launched..)
-    public String printCacheSize = "";
-
-    //APK Size
-    public String printAPKSize = "";
-
-    AppDetails cAppDetails;
-    public ArrayList<AppDetails.PackageInfoStruct> packagesList;
-
-
     private static final String TAG = "ProcessInfoDialog";
 
   @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     AndroidAppProcess process = getArguments().getParcelable("process");
 
-    //Get Package Size
-      getpackageSize(process.getPackageName(), getActivity());
 
       return new AlertDialog.Builder(getActivity())
         .setTitle(Utils.getName(getActivity(), process))
@@ -90,202 +75,55 @@ public class ProcessInfoDialog extends DialogFragment {
         .create();
   }
     //show the total RAM availableable
-    public String totalRAM() {
+    public long totalRAM() {
 
-      /*
-        String line;
-        String[] tempStringArray;
-        Long totalMemory=0L;
-
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("/proc/meminfo"));
-            line = reader.readLine();
-
-            tempStringArray = line.split("\\s+");
-            totalMemory = Long.parseLong(tempStringArray[1]);
-
-
-        }
-        catch (FileNotFoundException e) {
-            Log.d("Exception", "Unable To Read /proc/meminfo");
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
-      /*
         ActivityManager actManager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
         actManager.getMemoryInfo(memInfo);
-        //long totalMemory = memInfo.totalMem;
+        long totalMemory = memInfo.totalMem;
 
-        return (memInfo.totalMem/1024/1024/1024);
-        */
-        RandomAccessFile reader = null;
-        String load = null;
-        DecimalFormat twoDecimalForm = new DecimalFormat("#.##");
-        double totRam = 0;
-        String lastValue = "";
-        try {
-            reader = new RandomAccessFile("/proc/meminfo", "r");
-            load = reader.readLine();
-
-            // Get the Number value from the string
-            Pattern p = Pattern.compile("(\\d+)");
-            Matcher m = p.matcher(load);
-            String value = "";
-            while (m.find()) {
-                value = m.group(1);
-                // System.out.println("Ram : " + value);
-            }
-            reader.close();
-
-            totRam = Double.parseDouble(value);
-            // totRam = totRam / 1024;
-
-            double mb = totRam / 1024.0;
-            double gb = totRam / 1048576.0;
-            double tb = totRam / 1073741824.0;
-
-            if (tb > 1) {
-                lastValue = twoDecimalForm.format(tb).concat(" TB");
-            } else if (gb > 1) {
-                lastValue = twoDecimalForm.format(gb).concat(" GB");
-            } else if (mb > 1) {
-                lastValue = twoDecimalForm.format(mb).concat(" MB");
-            } else {
-                lastValue = twoDecimalForm.format(totRam).concat(" KB");
-            }
-
-
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            // Streams.close(reader);
-        }
-
-        return lastValue;
+        return (memInfo.totalMem);
 
     }
 
   private Spanned getProcessInfo(AndroidAppProcess process) {
+    HtmlBuilder html = new HtmlBuilder();
 
-      getpackageSize(process.getPackageName(), getActivity());
-      HtmlBuilder html = new HtmlBuilder();
-
-    html.p().strong("NAME: ").append(process.name).close();
-    html.p().strong("DATA SIZE: ").append(printDataSize).close();
-    html.p().strong("CACHE SIZE: ").append(printCacheSize).close();
-    html.p().strong("APK SIZE: ").append(printAPKSize).close();
+    html.p().strong("PACKAGE NAME: ").append(process.name).close();
     html.p().strong("POLICY: ").append(process.foreground ? "foreground process" : "background process").close();
     html.p().strong("PID: ").append(process.pid).close();
-
-    try {
-      Status status = process.status();
-      html.p().strong("UID/GID: ").append(status.getUid()).append('/').append(status.getGid()).close();
-    } catch (IOException e) {
-      Log.d(TAG, String.format("Error reading /proc/%d/status.", process.pid));
-    }
 
     // should probably be run in a background thread.
     try {
       Stat stat = process.stat();
-      //html.p().strong("PPID: ").append(stat.ppid()).close();
       long bootTime = System.currentTimeMillis() - SystemClock.elapsedRealtime();
       long startTime = bootTime + (10 * stat.starttime());
       SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy KK:mm:ss a", Locale.getDefault());
       html.p().strong("START TIME: ").append(sdf.format(startTime)).close();
-      html.p().strong("PROCESS CPU TIME (IN SEC): ").append((stat.stime() + stat.utime()) / 100).close(); // get into seconds
-
-      long userModeTicks = stat.utime();
-      long kernelModeTicks = stat.stime();
-      long percentOfTimeUserMode;
-      long percentOfTimeKernelMode;
-      if ((kernelModeTicks + userModeTicks) > 0) {
-        percentOfTimeUserMode = (userModeTicks * 100) / (userModeTicks + kernelModeTicks);
-        percentOfTimeKernelMode = (kernelModeTicks * 100) / (userModeTicks + kernelModeTicks);
-        html.p().strong("TIME EXECUTED IN USER MODE: ").append(percentOfTimeUserMode + "%").close();
-        html.p().strong("TIME EXECUTED IN KERNEL MODE: ").append(percentOfTimeKernelMode + "%").close();
-      }
+      long upTime = System.currentTimeMillis() ;
+      double pencentageCPU = (stat.stime() + stat.utime())/((upTime - startTime)/1000);
+      html.p().strong("CPU USED: ").append(pencentageCPU +"%").close();
+      if (pencentageCPU > 60.0)
+       html.p().strong("This application using a large percentage of CPU");
     } catch (IOException e) {
       Log.d(TAG, String.format("Error reading /proc/%d/stat.", process.pid));
     }
 
     try {
       Statm statm = process.statm();
-     // html.p().strong("SIZE: ").append(Formatter.formatFileSize(getActivity(), statm.getSize())).close();
-      html.p().strong("Size of App in RAM: ").append(Formatter.formatFileSize(getActivity(), statm.getResidentSetSize())).close();
-      //html.p().strong("TOTAL RAM2: ").append(Formatter.formatFileSize(getActivity(), totalRAM())).close();
-      html.p().strong("TOTAL RAM: ").append(totalRAM()).close();
+      html.p().strong("Size in RAM: ").append(Formatter.formatFileSize(getActivity(), statm.getResidentSetSize())).close();
+      double percentageRAM = statm.getResidentSetSize()*100/totalRAM();
+
+      html.p().strong("RAM USED: ").append(percentageRAM  +"%").close();
+
+      if (percentageRAM>30)
+          html.p().strong("This application using a large percentage of RAM");
     } catch (IOException e) {
       Log.d(TAG, String.format("Error reading /proc/%d/statm.", process.pid));
     }
 
-
     return html.build();
   }
 
-    public void getpackageSize(String pckgName, Context context) {
-        cAppDetails = new AppDetails((Activity) context);
-        packagesList = cAppDetails.getPackages();
 
-        // Create Object to Access Package Manager
-        PackageManager pm = context.getPackageManager();
-        Method getPackageSizeInfo;
-        String test = "";
-
-        try {
-            getPackageSizeInfo = pm.getClass().getMethod(
-                    "getPackageSizeInfo", String.class,
-                    IPackageStatsObserver.class);
-
-            //Get Package List of Name, PName =
-            getPackageSizeInfo.invoke(pm, pckgName,
-                    new cachePackState());
-        }
-        catch (SecurityException e) {
-            e.printStackTrace();
-        }
-        catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
-        catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private class cachePackState extends IPackageStatsObserver.Stub {
-        @RequiresApi(api = Build.VERSION_CODES.M)
-        @Override
-        public void onGetStatsCompleted(PackageStats pStats, boolean succeeded)
-                throws RemoteException {
-            displayStatsMB(pStats);
-        }
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void displayStatsMB(PackageStats pStats) {
-        String cacheSizeNo = Formatter.formatFileSize(getContext(), pStats.cacheSize);
-        String dataSizeNo = Formatter.formatFileSize(getContext(), pStats.dataSize);
-        String APKSizeNo = Formatter.formatFileSize(getContext(), pStats.codeSize);
-        String packageName = pStats.packageName;
-
-        printDataSize = dataSizeNo;
-        printCacheSize = cacheSizeNo;
-        printAPKSize = APKSizeNo;
-
-        Log.d("PACKAGE NAME", packageName);
-        Log.d("CACHE SIZE", cacheSizeNo);
-        Log.d("DATA SIZE", dataSizeNo);
-        Log.d("APK SIZE", APKSizeNo);
-    }
 }
