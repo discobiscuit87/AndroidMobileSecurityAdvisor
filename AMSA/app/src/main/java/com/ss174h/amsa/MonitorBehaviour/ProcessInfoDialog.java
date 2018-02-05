@@ -147,19 +147,14 @@ public class ProcessInfoDialog extends DialogFragment {
 
       fillData(process.getPackageName());
 
-      html.p().strong("ALL TRAFFIC PACKAGE RX: ").append(Formatter.formatFileSize(getActivity(),allTrafficRx));
-      html.p().strong("ALL TRAFFIC PACKAGE TX: ").append(Formatter.formatFileSize(getActivity(),allTraffixTx));
-
-      html.p().strong("TRAFFIC PACKAGE RX: ").append(Formatter.formatFileSize(getActivity(),trafficPackageRx));
-      html.p().strong("TRAFFIC PACKAGE TX: ").append(Formatter.formatFileSize(getActivity(),trafficPackageTx));
-
-
-      html.p().strong("ALL NETWORK PACKAGE RX: ").append(Formatter.formatFileSize(getActivity(),allNetworkRx));
-      html.p().strong("ALL NETWORK PACKAGE TX: ").append(Formatter.formatFileSize(getActivity(),allNetworkTx));
-
-      html.p().strong("NETWORK PACKAGE RX: ").append(Formatter.formatFileSize(getActivity(),networkPackageRx));
-      html.p().strong("NETWORK PACKAGE TX: ").append(Formatter.formatFileSize(getActivity(),networkPackageTx));
-
+      if (networkPackageRx !=0 && networkPackageTx!=0) {
+          html.p().strong("TOTAL DATA SIZE RECEIVED: ").append(Formatter.formatFileSize(getActivity(), networkPackageRx));
+          html.p().strong("TOTAL DATA SIZE SENT: ").append(Formatter.formatFileSize(getActivity(), networkPackageTx));
+      }else
+      {
+          html.p().strong("TOTAL DATA SIZE RECEIVED: ").append(Formatter.formatFileSize(getActivity(), trafficPackageRx));
+          html.p().strong("TOTAL DATA SIZE SENT: ").append(Formatter.formatFileSize(getActivity(), trafficPackageTx));
+      }
     return html.build();
   }
 
@@ -195,8 +190,8 @@ public class ProcessInfoDialog extends DialogFragment {
         allNetworkRx = mobileWifiRx;
         allNetworkTx = mobileWifiTx;
 
-        Log.d("ALL MOBILE WIFI RX", mobileWifiRx + " B");
-        Log.d("ALL MOBILE WIFI TX", (mobileWifiTx + " B"));
+       // Log.d("ALL MOBILE WIFI RX", mobileWifiRx + " B");
+        //Log.d("ALL MOBILE WIFI TX", (mobileWifiTx + " B"));
 
     }
 
@@ -208,24 +203,24 @@ public class ProcessInfoDialog extends DialogFragment {
         networkPackageRx = mobileWifiRx;
         networkPackageTx = mobileWifiTx;
 
-        Log.d("NETWORK PACKAGE RX", mobileWifiRx + " B");
-        Log.d("NETWORK PACKAGE TX",mobileWifiTx + " B");
+        //Log.d("NETWORK PACKAGE RX", mobileWifiRx + " B");
+        //Log.d("NETWORK PACKAGE TX",mobileWifiTx + " B");
     }
 
     private void fillTrafficStatsAll() {
         allTrafficRx = TrafficStatsHelper.getAllRxBytes();
         allTraffixTx = TrafficStatsHelper.getAllTxBytes();
 
-        Log.d("TRAFFIC STATS TX",TrafficStatsHelper.getAllTxBytes() + " B");
-        Log.d("TRAFFIC STATS RX", TrafficStatsHelper.getAllRxBytes() + " B");
+        //Log.d("TRAFFIC STATS TX",TrafficStatsHelper.getAllTxBytes() + " B");
+        //Log.d("TRAFFIC STATS RX", TrafficStatsHelper.getAllRxBytes() + " B");
     }
 
     private void fillTrafficStatsPackage(int uid) {
         trafficPackageRx = TrafficStatsHelper.getPackageRxBytes(uid);
         trafficPackageTx = TrafficStatsHelper.getPackageTxBytes(uid);
 
-        Log.d("TRAFFIC S PACKAGE RX",TrafficStatsHelper.getPackageRxBytes(uid) + " B");
-        Log.d("TRAFFIC S PACKAGE TX", TrafficStatsHelper.getPackageTxBytes(uid) + " B");
+        //Log.d("TRAFFIC S PACKAGE RX",TrafficStatsHelper.getPackageRxBytes(uid) + " B");
+        //Log.d("TRAFFIC S PACKAGE TX", TrafficStatsHelper.getPackageTxBytes(uid) + " B");
     }
 
     private boolean hasPermissionToReadPhoneStats() {
