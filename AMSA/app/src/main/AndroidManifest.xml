@@ -9,13 +9,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS_PRIVILEGED" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
-        tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
     <permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         android:protectionLevel="signature"/>
-
 
     <application
         android:allowBackup="true"
@@ -42,20 +41,9 @@
         <activity android:name=".APKScanner.CheckAppCertActivity" />
         <activity android:name=".CheckPermissions.CheckAppPermissionsActivity" />
 
-        <receiver
-            android:name=".RealTime.PackageHandler"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
-
-        <activity android:name=".MalwareScanner.ScanMalwareActivity"></activity>
-        <activity android:name=".MonitorBehaviour.MonitorActivity"></activity>
-        <activity android:name=".EnvCondition.ReviewEnv"></activity>
+        <activity android:name=".MalwareScanner.ScanMalwareActivity"/>
+        <activity android:name=".MonitorBehaviour.MonitorActivity"/>
+        <activity android:name=".EnvCondition.ReviewEnv"/>
     </application>
 
 </manifest>

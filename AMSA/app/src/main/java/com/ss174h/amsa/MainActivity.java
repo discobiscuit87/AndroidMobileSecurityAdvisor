@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         //Create file descriptor
         verifyStoragePermissions(this);
 
-        File storageDir = new File("/sdcard/Download");
+        File storageDir = new File(downloadPath);
 
         File listAllFiles[] = storageDir.listFiles();
 
@@ -75,11 +76,13 @@ public class MainActivity extends AppCompatActivity {
 
         //listAllFiles.
 
-        for(int i=0;i<listAllFiles.length;i++)
-        {
-            Log.i("Download Directory File",listAllFiles[i].getName());
+        if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+            for(int i=0;i<listAllFiles.length;i++)
+            {
+                Log.i("Download Directory File",listAllFiles[i].getName());
+            }
         }
-
 
         fileOb.startWatching();
 
@@ -172,10 +175,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d("isExtStorageAvail", Environment.getExternalStorageState());
 
         //listAllFiles.
-
-        for(int i=0;i<listAllFiles.length;i++)
-        {
-            Log.i("Download Directory File",listAllFiles[i].getName());
+        if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+            for(int i=0;i<listAllFiles.length;i++)
+            {
+                Log.i("Download Directory File",listAllFiles[i].getName());
+            }
         }
         fileOb.startWatching();
     }
