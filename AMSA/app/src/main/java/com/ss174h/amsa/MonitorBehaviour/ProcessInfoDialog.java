@@ -120,6 +120,7 @@ public class ProcessInfoDialog extends DialogFragment {
     html.p().strong("POLICY: ").append(process.foreground ? "foreground process" : "background process").close();
     html.p().strong("PID: ").append(process.pid).close();
 
+
     // should probably be run in a background thread.
     try {
       Stat stat = process.stat();
@@ -161,22 +162,27 @@ public class ProcessInfoDialog extends DialogFragment {
           html.p().strong("TRAFFIC SENT: ").append(Formatter.formatFileSize(getActivity(), trafficPackageTx));
       }
 
-      String pId = Integer.toString(process.pid);
-      String filepathTcp = "/proc/"+pId+"/net/tcp6";
-      Log.e("filepath",filepathTcp);
-      StringBuilder sb = new StringBuilder();
+      String filepathTCP = "/proc/net/tcp";
+      String filepathTCP6 = "/proc/net/tcp6";
+      String filepathUDP = "/proc/net/udp";
+      String filepathUDP6 = "/proc/net/udp6";
       addresses = new ArrayList<>();
 
       try {
-          String result = getStringFromFile(filepathTcp);
-          Log.e("Result",result);
-          getAddresses(lines);
+          String result = getStringFromFile(filepathTCP);
+          getAddresses(lines,process.uid);
 
+          result = getStringFromFile(filepathTCP6);
+          getAddressesTCP6(lines,process.uid);
+
+          result = getStringFromFile(filepathUDP);
+          getAddressesUDP(lines,process.uid);
+
+          html.p().strong("TRAFFIC DESTINATIONS:");
           for(String address : addresses) {
               address += "\n";
-              sb.append(address);
+              html.p(address);
           }
-          html.p().strong("TRAFFIC DESTINATIONS:\n").append(sb.toString());
       } catch (Exception e) {
 
       }
@@ -330,15 +336,17 @@ public class ProcessInfoDialog extends DialogFragment {
         return ret;
     }
 
-    public void getAddresses(ArrayList<String> arrayList) {
+    public void getAddresses(ArrayList<String> arrayList, int uid) {
 
       for(int i=1;i<arrayList.size();i++) {
-          String hex = arrayList.get(i).substring(20,28);
-          convertHex(hex);
+          if(arrayList.get(i).contains(" "+Integer.toString(uid)+" ")) {
+              String hex = arrayList.get(i).substring(20,28);
+              convertHexTCP(hex);
+          }
       }
     }
 
-    public void convertHex(String hex) {
+    public void convertHexTCP(String hex) {
       String ip = "";
       String four = hex.substring(0,2);
       String three = hex.substring(2,4);
@@ -349,9 +357,60 @@ public class ProcessInfoDialog extends DialogFragment {
       for(int i = 0; i < flip.length(); i = i + 2) {
           ip = ip + Integer.valueOf(flip.substring(i, i+2), 16) + ".";
       }
-      addresses.add(ip.substring(0,ip.length()-1));
+
+      addresses.add(ip.substring(0,ip.length()-1)+ " (TCP)");
     }
 
+    public void getAddressesTCP6(ArrayList<String> arrayList, int uid) {
+
+        for(int i=1;i<arrayList.size();i++) {
+            if(arrayList.get(i).contains(" "+Integer.toString(uid)+" ")) {
+                String hex = arrayList.get(i).substring(44,76);
+                convertHexTCP6(hex);
+            }
+        }
+    }
+
+    public void convertHexTCP6(String hex) {
+        hex = new StringBuilder(hex).reverse().toString();
+        StringBuilder ip = new StringBuilder();
+        for(int i=0;i<hex.length();i=i+8){
+            String word = hex.substring(i,i+8);
+            for (int j = word.length() - 1; j >= 0; j = j - 2) {
+                ip.append(word.substring(j - 1, j + 1));
+                ip.append((j==5)?":":"");//in the middle
+            }
+            ip.append(":");
+        }
+
+        addresses.add(ip.substring(0,ip.length()-1) + " (TCPv6)");
+    }
+
+    public void getAddressesUDP(ArrayList<String>arrayList, int uid) {
+
+        for(int i=1;i<arrayList.size();i++) {
+            if(arrayList.get(i).contains(" "+Integer.toString(uid)+" ")) {
+                String hex = arrayList.get(i).substring(22,30);
+                Log.e("Hex",hex);
+                convertHexUDP(hex);
+            }
+        }
+    }
+
+    public void convertHexUDP(String hex) {
+        String ip = "";
+        String four = hex.substring(0,2);
+        String three = hex.substring(2,4);
+        String two = hex.substring(4,6);
+        String one = hex.substring(6,8);
+        String flip = one+two+three+four;
+
+        for(int i = 0; i < flip.length(); i = i + 2) {
+            ip = ip + Integer.valueOf(flip.substring(i, i+2), 16) + ".";
+        }
+
+        addresses.add(ip.substring(0,ip.length()-1)+ " (UDP)");
+    }
 }
 
 
