@@ -18,12 +18,14 @@
 package com.ss174h.amsa.MonitorBehaviour;
 
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
 import com.jaredrummler.android.processes.models.AndroidAppProcess;
+import com.ss174h.amsa.MainActivity;
 
 
 import java.util.List;
@@ -39,6 +41,10 @@ public class ProcessListFragment extends ListFragment implements AndroidAppProce
 
   @Override public void onComplete(List<AndroidAppProcess> processes) {
     setListAdapter(new ProcessListAdapter(getActivity(), processes));
+
+    Intent logRemoteIPIntent = new Intent(getActivity(), LogRemoteIPIntentService.class);
+    getActivity().startService(logRemoteIPIntent);
+
   }
 
   @Override public void onListItemClick(ListView l, View v, int position, long id) {
@@ -46,6 +52,7 @@ public class ProcessListFragment extends ListFragment implements AndroidAppProce
     ProcessInfoDialog dialog = new ProcessInfoDialog();
     Bundle args = new Bundle();
     args.putParcelable("process", process);
+    args.putInt("position", position);
     dialog.setArguments(args);
     dialog.show(getActivity().getFragmentManager(), "ProcessInfoDialog");
   }

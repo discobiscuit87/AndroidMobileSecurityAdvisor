@@ -79,15 +79,18 @@ public class ProcessInfoDialog extends DialogFragment {
     private long allNetworkRx;
     private long allNetworkTx;
 
+    private int position;
+
     private static final String TAG = "ProcessInfoDialog";
-    private ArrayList<String> lines;
-    private ArrayList<String> addresses;
+
+
 
   @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 
     requestPermissions();
     AndroidAppProcess process = getArguments().getParcelable("process");
+    position = getArguments().getInt("position");
 
 
       return new AlertDialog.Builder(getActivity())
@@ -162,30 +165,20 @@ public class ProcessInfoDialog extends DialogFragment {
           html.p().strong("TRAFFIC SENT: ").append(Formatter.formatFileSize(getActivity(), trafficPackageTx));
       }
 
-      String filepathTCP = "/proc/net/tcp";
-      String filepathTCP6 = "/proc/net/tcp6";
-      String filepathUDP = "/proc/net/udp";
-      String filepathUDP6 = "/proc/net/udp6";
-      addresses = new ArrayList<>();
 
-      try {
-          String result = getStringFromFile(filepathTCP);
-          getAddresses(lines,process.uid);
 
-          result = getStringFromFile(filepathTCP6);
-          getAddressesTCP6(lines,process.uid);
+      //call arraylist of addresses
 
-          result = getStringFromFile(filepathUDP);
-          getAddressesUDP(lines,process.uid);
+      ProcessRemoteIP p = LogRemoteIPIntentService.processesRemoteIPs.get(position);
 
-          html.p().strong("TRAFFIC DESTINATIONS:");
-          for(String address : addresses) {
-              address += "\n";
-              html.p(address);
-          }
-      } catch (Exception e) {
+      html.p().strong("TRAFFIC DESTINATIONS:");
 
+      for (String address : p.getRemoteAddresses()) {
+          address += "\n";
+          html.p(address);
       }
+
+
     return html.build();
   }
 
@@ -314,103 +307,7 @@ public class ProcessInfoDialog extends DialogFragment {
         return hasPermissionToReadNetworkHistory() && hasPermissionToReadPhoneStats();
     }
 
-    public String convertStreamToString(InputStream is) throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        lines = new ArrayList<>();
-        while ((line = reader.readLine()) != null) {
-            lines.add(line);
-            sb.append(line).append("\n");
-        }
-        reader.close();
-        return sb.toString();
-    }
 
-    public String getStringFromFile (String filePath) throws Exception {
-        File fl = new File(filePath);
-        FileInputStream fin = new FileInputStream(fl);
-        String ret = convertStreamToString(fin);
-        //Make sure you close all streams.
-        fin.close();
-        return ret;
-    }
-
-    public void getAddresses(ArrayList<String> arrayList, int uid) {
-
-      for(int i=1;i<arrayList.size();i++) {
-          if(arrayList.get(i).contains(" "+Integer.toString(uid)+" ")) {
-              String hex = arrayList.get(i).substring(20,28);
-              convertHexTCP(hex);
-          }
-      }
-    }
-
-    public void convertHexTCP(String hex) {
-      String ip = "";
-      String four = hex.substring(0,2);
-      String three = hex.substring(2,4);
-      String two = hex.substring(4,6);
-      String one = hex.substring(6,8);
-      String flip = one+two+three+four;
-
-      for(int i = 0; i < flip.length(); i = i + 2) {
-          ip = ip + Integer.valueOf(flip.substring(i, i+2), 16) + ".";
-      }
-
-      addresses.add(ip.substring(0,ip.length()-1)+ " (TCP)");
-    }
-
-    public void getAddressesTCP6(ArrayList<String> arrayList, int uid) {
-
-        for(int i=1;i<arrayList.size();i++) {
-            if(arrayList.get(i).contains(" "+Integer.toString(uid)+" ")) {
-                String hex = arrayList.get(i).substring(44,76);
-                convertHexTCP6(hex);
-            }
-        }
-    }
-
-    public void convertHexTCP6(String hex) {
-        hex = new StringBuilder(hex).reverse().toString();
-        StringBuilder ip = new StringBuilder();
-        for(int i=0;i<hex.length();i=i+8){
-            String word = hex.substring(i,i+8);
-            for (int j = word.length() - 1; j >= 0; j = j - 2) {
-                ip.append(word.substring(j - 1, j + 1));
-                ip.append((j==5)?":":"");//in the middle
-            }
-            ip.append(":");
-        }
-
-        addresses.add(ip.substring(0,ip.length()-1) + " (TCPv6)");
-    }
-
-    public void getAddressesUDP(ArrayList<String>arrayList, int uid) {
-
-        for(int i=1;i<arrayList.size();i++) {
-            if(arrayList.get(i).contains(" "+Integer.toString(uid)+" ")) {
-                String hex = arrayList.get(i).substring(22,30);
-                Log.e("Hex",hex);
-                convertHexUDP(hex);
-            }
-        }
-    }
-
-    public void convertHexUDP(String hex) {
-        String ip = "";
-        String four = hex.substring(0,2);
-        String three = hex.substring(2,4);
-        String two = hex.substring(4,6);
-        String one = hex.substring(6,8);
-        String flip = one+two+three+four;
-
-        for(int i = 0; i < flip.length(); i = i + 2) {
-            ip = ip + Integer.valueOf(flip.substring(i, i+2), 16) + ".";
-        }
-
-        addresses.add(ip.substring(0,ip.length()-1)+ " (UDP)");
-    }
 }
 
 

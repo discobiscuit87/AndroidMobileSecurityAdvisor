@@ -39,7 +39,7 @@ import static com.ss174h.amsa.MonitorBehaviour.AppIconRequestHandler.SCHEME_PNAM
 
 public class ProcessListAdapter extends BaseAdapter {
 
-  private final List<AndroidAppProcess> processes;
+  public static List<AndroidAppProcess> processes;
   private final LayoutInflater inflater;
   private final Context context;
   private final Picasso picasso;

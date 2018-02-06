@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.ss174h.amsa.APKScanner.APKScannerService;
 import com.ss174h.amsa.DetectNewAPK.MyFileObserver;
 import com.ss174h.amsa.MalwareScanner.ScanMalwareActivity;
+import com.ss174h.amsa.MonitorBehaviour.LogRemoteIPIntentService;
 import com.ss174h.amsa.MonitorBehaviour.MonitorActivity;
 import com.ss174h.amsa.EnvCondition.ReviewEnv;
 
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Path name",storageDir.getPath());
         Log.d("isExtStorageAvail", Environment.getExternalStorageState());
 
-        //listAllFiles.
+
 
         if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MonitorActivity.class);
-                startActivityForResult(intent,0);
+                
                 startActivity(intent);
             }
         });
@@ -134,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this,"Reviewing mobile environment",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getApplicationContext(), ReviewEnv.class);
-                startActivityForResult(intent,0);
+
                 startActivity(intent);
             }
         });
