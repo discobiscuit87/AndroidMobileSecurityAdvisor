@@ -50,9 +50,13 @@ import com.jaredrummler.android.processes.models.Status;
 import com.jaredrummler.android.util.HtmlBuilder;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -76,6 +80,8 @@ public class ProcessInfoDialog extends DialogFragment {
     private long allNetworkTx;
 
     private static final String TAG = "ProcessInfoDialog";
+    private ArrayList<String> lines;
+    private ArrayList<String> addresses;
 
   @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -114,7 +120,6 @@ public class ProcessInfoDialog extends DialogFragment {
     html.p().strong("POLICY: ").append(process.foreground ? "foreground process" : "background process").close();
     html.p().strong("PID: ").append(process.pid).close();
 
-
     // should probably be run in a background thread.
     try {
       Stat stat = process.stat();
@@ -148,12 +153,32 @@ public class ProcessInfoDialog extends DialogFragment {
       fillData(process.getPackageName());
 
       if (networkPackageRx !=0 && networkPackageTx!=0) {
-          html.p().strong("TOTAL DATA SIZE RECEIVED: ").append(Formatter.formatFileSize(getActivity(), networkPackageRx));
-          html.p().strong("TOTAL DATA SIZE SENT: ").append(Formatter.formatFileSize(getActivity(), networkPackageTx));
+          html.p().strong("TRAFFIC RECEIVED: ").append(Formatter.formatFileSize(getActivity(), networkPackageRx));
+          html.p().strong("TRAFFIC SENT: ").append(Formatter.formatFileSize(getActivity(), networkPackageTx));
       }else
       {
-          html.p().strong("TOTAL DATA SIZE RECEIVED: ").append(Formatter.formatFileSize(getActivity(), trafficPackageRx));
-          html.p().strong("TOTAL DATA SIZE SENT: ").append(Formatter.formatFileSize(getActivity(), trafficPackageTx));
+          html.p().strong("TRAFFIC RECEIVED: ").append(Formatter.formatFileSize(getActivity(), trafficPackageRx));
+          html.p().strong("TRAFFIC SENT: ").append(Formatter.formatFileSize(getActivity(), trafficPackageTx));
+      }
+
+      String pId = Integer.toString(process.pid);
+      String filepathTcp = "/proc/"+pId+"/net/tcp6";
+      Log.e("filepath",filepathTcp);
+      StringBuilder sb = new StringBuilder();
+      addresses = new ArrayList<>();
+
+      try {
+          String result = getStringFromFile(filepathTcp);
+          Log.e("Result",result);
+          getAddresses(lines);
+
+          for(String address : addresses) {
+              address += "\n";
+              sb.append(address);
+          }
+          html.p().strong("TRAFFIC DESTINATIONS:\n").append(sb.toString());
+      } catch (Exception e) {
+
       }
     return html.build();
   }
@@ -282,6 +307,51 @@ public class ProcessInfoDialog extends DialogFragment {
     private boolean hasPermissions() {
         return hasPermissionToReadNetworkHistory() && hasPermissionToReadPhoneStats();
     }
+
+    public String convertStreamToString(InputStream is) throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        lines = new ArrayList<>();
+        while ((line = reader.readLine()) != null) {
+            lines.add(line);
+            sb.append(line).append("\n");
+        }
+        reader.close();
+        return sb.toString();
+    }
+
+    public String getStringFromFile (String filePath) throws Exception {
+        File fl = new File(filePath);
+        FileInputStream fin = new FileInputStream(fl);
+        String ret = convertStreamToString(fin);
+        //Make sure you close all streams.
+        fin.close();
+        return ret;
+    }
+
+    public void getAddresses(ArrayList<String> arrayList) {
+
+      for(int i=1;i<arrayList.size();i++) {
+          String hex = arrayList.get(i).substring(20,28);
+          convertHex(hex);
+      }
+    }
+
+    public void convertHex(String hex) {
+      String ip = "";
+      String four = hex.substring(0,2);
+      String three = hex.substring(2,4);
+      String two = hex.substring(4,6);
+      String one = hex.substring(6,8);
+      String flip = one+two+three+four;
+
+      for(int i = 0; i < flip.length(); i = i + 2) {
+          ip = ip + Integer.valueOf(flip.substring(i, i+2), 16) + ".";
+      }
+      addresses.add(ip.substring(0,ip.length()-1));
+    }
+
 }
 
 
