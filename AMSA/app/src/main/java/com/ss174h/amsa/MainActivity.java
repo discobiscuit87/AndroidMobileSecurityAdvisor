@@ -2,9 +2,11 @@ package com.ss174h.amsa;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
@@ -196,11 +198,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!isAccessGranted()) {
-            // redirect to settings for "App Usage" permission
-            // better to add dialog with instruction before redirecting to the settings
-            //k thx bye
-            Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-            startActivity(intent);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage("This app uses other app to work. Click go to settings and enable " +
+                                "AMSA in the \"App Usage Permission\"")
+                    .setTitle("Permission Required")
+                    .setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked OK button
+                    Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.setCancelable(false);
+            dialog.show();
         }
     }
 
