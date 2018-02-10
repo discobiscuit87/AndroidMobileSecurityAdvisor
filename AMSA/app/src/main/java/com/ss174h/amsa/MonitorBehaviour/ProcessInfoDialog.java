@@ -199,7 +199,7 @@ public class ProcessInfoDialog extends DialogFragment {
         int uid = getPackageUid(getActivity(), packageName);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             NetworkStatsManager networkStatsManager = (NetworkStatsManager) getActivity().getSystemService(Context.NETWORK_STATS_SERVICE);
-            NetworkStatsHelper networkStatsHelper = new NetworkStatsHelper(networkStatsManager, uid);
+            NetworkStatsHelper networkStatsHelper = new NetworkStatsHelper(networkStatsManager, uid, getActivity());
             fillNetworkStatsAll(networkStatsHelper);
             fillNetworkStatsPackage(uid, networkStatsHelper);
         }

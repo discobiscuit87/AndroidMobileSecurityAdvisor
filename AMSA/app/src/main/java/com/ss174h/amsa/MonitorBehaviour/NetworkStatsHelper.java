@@ -4,13 +4,19 @@ package com.ss174h.amsa.MonitorBehaviour;
  * Created by Mac on 2/2/18.
  */
 
+import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.RemoteException;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 
 
@@ -18,6 +24,7 @@ import android.telephony.TelephonyManager;
 @TargetApi(Build.VERSION_CODES.M)
 public class NetworkStatsHelper {
 
+    Activity activity;
     NetworkStatsManager networkStatsManager;
     int packageUid;
 
@@ -25,9 +32,10 @@ public class NetworkStatsHelper {
         this.networkStatsManager = networkStatsManager;
     }
 
-    public NetworkStatsHelper(NetworkStatsManager networkStatsManager, int packageUid) {
+    public NetworkStatsHelper(NetworkStatsManager networkStatsManager, int packageUid, Activity activity) {
         this.networkStatsManager = networkStatsManager;
         this.packageUid = packageUid;
+        this.activity = activity;
     }
 
     public long getAllRxBytesMobile(Context context) {
@@ -153,8 +161,14 @@ public class NetworkStatsHelper {
 
     private String getSubscriberId(Context context, int networkType) {
         if (ConnectivityManager.TYPE_MOBILE == networkType) {
-            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            return tm.getSubscriberId();
+            int permissionCheck = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE);
+
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+
+            } else {
+                TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+                return tm.getSubscriberId();
+            }
         }
         return "";
     }
