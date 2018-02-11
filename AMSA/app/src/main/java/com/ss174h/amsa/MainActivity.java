@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String PROCESS_RESPONSE = "com.ss174h.amsa.intent.action.PROCESS_RESPONSE";
     private ArrayList<String> array;
     private APKReceiver apkReceiver;
-    private SDReceiver sdReceiver;
 
     //This path contains all the files downloaded by user
     private String downloadPath = "/sdcard/Download";
@@ -63,13 +62,34 @@ public class MainActivity extends AppCompatActivity {
         startService(intent);
         apkReceiver = new APKReceiver();
         registerReceiver(apkReceiver, intentFilter);
-        IntentFilter intentFilter1 = new IntentFilter();
-        intentFilter1.addCategory(Intent.ACTION_MEDIA_MOUNTED);
-        sdReceiver = new SDReceiver();
-        registerReceiver(sdReceiver,intentFilter1);
 
         //Create file descriptor
         verifyStoragePermissions(this);
+
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+        }
+
+        if (!isAccessGranted()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage("This app uses other app to work. Click go to settings and enable " +
+                    "AMSA in the \"App Usage Permission\"")
+                    .setTitle("Permission Required")
+                    .setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User clicked OK button
+                            Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+                            startActivity(intent);
+                        }
+                    });
+
+            AlertDialog dialog = builder.create();
+            dialog.setCancelable(false);
+            dialog.show();
+        }
 
         File storageDir = new File(downloadPath);
 
@@ -79,8 +99,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d("App can access",storageDir.canRead()+"");
         Log.d("Path name",storageDir.getPath());
         Log.d("isExtStorageAvail", Environment.getExternalStorageState());
-
-
 
         if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -96,10 +114,12 @@ public class MainActivity extends AppCompatActivity {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent appIntent = new Intent(v.getContext(), ViewAppsActivity.class);
-                appIntent.putStringArrayListExtra("array",array);
-                appIntent.putExtra("Check","CheckCerts");
-                v.getContext().startActivity(appIntent);
+                if(!array.isEmpty()) {
+                    Intent appIntent = new Intent(v.getContext(), ViewAppsActivity.class);
+                    appIntent.putStringArrayListExtra("array",array);
+                    appIntent.putExtra("Check","CheckCerts");
+                    v.getContext().startActivity(appIntent);
+                }
             }
         });
 
@@ -107,9 +127,11 @@ public class MainActivity extends AppCompatActivity {
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent appIntent = new Intent(v.getContext(), ScanMalwareActivity.class);
-                appIntent.putStringArrayListExtra("array",array);
-                v.getContext().startActivity(appIntent);
+                if(!array.isEmpty()) {
+                    Intent appIntent = new Intent(v.getContext(), ScanMalwareActivity.class);
+                    appIntent.putStringArrayListExtra("array",array);
+                    v.getContext().startActivity(appIntent);
+                }
             }
         });
 
@@ -117,10 +139,12 @@ public class MainActivity extends AppCompatActivity {
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent appIntent = new Intent(v.getContext(), ViewAppsActivity.class);
-                appIntent.putStringArrayListExtra("array",array);
-                appIntent.putExtra("Check","CheckPerms");
-                v.getContext().startActivity(appIntent);
+                if(!array.isEmpty()) {
+                    Intent appIntent = new Intent(v.getContext(), ViewAppsActivity.class);
+                    appIntent.putStringArrayListExtra("array",array);
+                    appIntent.putExtra("Check","CheckPerms");
+                    v.getContext().startActivity(appIntent);
+                }
             }
         });
 
@@ -156,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         unregisterReceiver(apkReceiver);
-        unregisterReceiver(sdReceiver);
     }
 
     @Override
@@ -164,14 +187,18 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter(PROCESS_RESPONSE);
         intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        Intent intent = new Intent(this, APKScannerService.class);
+        startService(intent);
         registerReceiver(apkReceiver, intentFilter);
-        IntentFilter intentFilter1 = new IntentFilter();
-        intentFilter1.addCategory(Intent.ACTION_MEDIA_MOUNTED);
-        registerReceiver(sdReceiver,intentFilter1);
         verifyStoragePermissions(this);
 
         File storageDir = new File("/sdcard/Download");
 
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+        }
 
         File listAllFiles[] = storageDir.listFiles();
 
@@ -189,32 +216,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         fileOb.startWatching();
-
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
-
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
-        } else {
-        }
-
-        if (!isAccessGranted()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-            builder.setMessage("This app uses other app to work. Click go to settings and enable " +
-                                "AMSA in the \"App Usage Permission\"")
-                    .setTitle("Permission Required")
-                    .setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User clicked OK button
-                    Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-                    startActivity(intent);
-                }
-            });
-
-            AlertDialog dialog = builder.create();
-            dialog.setCancelable(false);
-            dialog.show();
-        }
     }
 
 
@@ -259,22 +260,6 @@ public class MainActivity extends AppCompatActivity {
 
             if(array.isEmpty()) {
                 Toast.makeText(context, "No sideloaded applications installed!", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    public class SDReceiver extends BroadcastReceiver {
-
-        String name;
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            File sdCardRoot = Environment.getExternalStorageDirectory();
-            File yourDir = new File(sdCardRoot, "/Download");
-            for (File f : yourDir.listFiles()) {
-                if (f.isFile())
-                    name = f.getName();
-                    Log.e("Name", name);
             }
         }
     }
