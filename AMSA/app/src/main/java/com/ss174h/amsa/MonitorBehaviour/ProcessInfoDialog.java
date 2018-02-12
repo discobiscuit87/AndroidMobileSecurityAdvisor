@@ -172,10 +172,18 @@ public class ProcessInfoDialog extends DialogFragment {
       ProcessRemoteIP p = LogRemoteIPIntentService.processesRemoteIPs.get(position);
 
       html.p().strong("TRAFFIC DESTINATIONS:");
+      final String item1;
+      final String item2_type;
+      final String item2_value;
 
-      for (String address : p.getRemoteAddresses()) {
-          address += "\n";
-          html.p(address);
+      for (RemoteAddress address : p.getRemoteAddresses()) {
+          //Log.d(" Dialog ").append(address.getRemoteAdd().getHostAddress());
+          html.p().strong("HOST NAME: ").append(address.getRemoteAdd().getHostName());
+          html.p().strong("IP Address: ").append(address.getRemoteAdd().getHostAddress());
+          html.p().strong("PORT: ").append(address.getRemotePort());
+          html.p().strong("Connection Info: ").append(KnownPorts.CompileConnectionInfo(address.getRemotePort(), address.getType()));
+
+
       }
 
 

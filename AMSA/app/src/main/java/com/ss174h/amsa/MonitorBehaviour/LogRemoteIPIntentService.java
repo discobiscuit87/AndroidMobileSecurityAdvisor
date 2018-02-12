@@ -5,20 +5,26 @@ import android.content.Intent;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.jaredrummler.android.processes.models.AndroidAppProcess;
 
+import static com.ss174h.amsa.MonitorBehaviour.TLType.tcp;
+import static com.ss174h.amsa.MonitorBehaviour.TLType.tcp6;
+import static com.ss174h.amsa.MonitorBehaviour.TLType.udp;
 import static java.lang.Thread.sleep;
 
 public class LogRemoteIPIntentService extends IntentService {
 
-    private ArrayList<String> addresses;
+    private ArrayList<RemoteAddress> addresses;
     private ArrayList<String> lines;
 
     public static List<ProcessRemoteIP> processesRemoteIPs = new ArrayList<>();
@@ -42,22 +48,20 @@ public class LogRemoteIPIntentService extends IntentService {
                 String filepathTCP = "/proc/net/tcp";
                 String filepathTCP6 = "/proc/net/tcp6";
                 String filepathUDP = "/proc/net/udp";
+                String filepathUDP6 = "/proc/net/udp6";
                 addresses = new ArrayList<>();
 
                 AndroidAppProcess process = ProcessListAdapter.processes.get(i);
 
 
                 try {
-                    getStringFromFile(filepathTCP);
-                    getAddresses(lines, process.uid);
+                    addresses.addAll(getStringFromFile(filepathTCP, process.uid, TLType.tcp));
+                    addresses.addAll(getStringFromFile(filepathTCP6, process.uid, TLType.tcp6));
+                    addresses.addAll(getStringFromFile(filepathUDP, process.uid, TLType.udp));
+                    addresses.addAll(getStringFromFile(filepathUDP6, process.uid, TLType.udp6));
 
-                    getStringFromFile(filepathTCP6);
-                    getAddressesTCP6(lines, process.uid);
+                    for (RemoteAddress address : addresses) {
 
-                    getStringFromFile(filepathUDP);
-                    getAddressesUDP(lines, process.uid);
-
-                    for (String address : addresses) {
                         processesRemoteIPs.get(i).addAddress(address);
                     }
                 } catch (Exception e) {
@@ -65,8 +69,9 @@ public class LogRemoteIPIntentService extends IntentService {
                 }
             }
 
+
             try {
-                sleep(2000);
+                sleep(1000);
             }
 
             catch(InterruptedException ie)
@@ -78,114 +83,97 @@ public class LogRemoteIPIntentService extends IntentService {
 
     }
 
-    public void convertStreamToString(InputStream is) throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        String line;
-        lines = new ArrayList<>();
-        while ((line = reader.readLine()) != null) {
-            lines.add(line);
+    public String convertStreamToString(InputStream is) throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length = 0;
+        while ((length = is.read(buffer)) != -1) {
+            baos.write(buffer, 0, length);
         }
-        reader.close();
+        return baos.toString("UTF-8");
     }
 
-    public void getStringFromFile (String filePath) throws Exception {
+    public List<RemoteAddress> getStringFromFile (String filePath, int uid, TLType type) throws Exception {
         File fl = new File(filePath);
         FileInputStream fin = new FileInputStream(fl);
-        convertStreamToString(fin);
+        LinkedList<RemoteAddress> reportList = new LinkedList<>();
+        RemoteAddress r;
+        String splitTabs[];
+        String[] splitLines=convertStreamToString(fin).split("\\n");
+        for (int i = 1; i < splitLines.length; i++) {
+            splitLines[i] = splitLines[i].trim();
+
+            while (splitLines[i].contains("  ")) {
+                splitLines[i] = splitLines[i].replace("  ", " ");
+            }
+            splitTabs = splitLines[i].split("\\s");
+            if(Integer.parseInt(splitTabs[7]) == uid) {
+                if (type == TLType.tcp || type == TLType.udp) {
+                    //Init IPv4 values
+                    r = initReport4(splitTabs, type);
+                } else {
+                    //Init IPv6 values
+                    r = initReport6(splitTabs, type);
+                }
+                reportList.add(r);
+            }
+        }
         //Make sure you close all streams.
         fin.close();
+
+        return reportList;
+    }
+    //Init parsed data to IPv4 connection report
+    private RemoteAddress initReport4(String[] splitTabs, TLType type){
+        int pos;
+        pos = 0;
+        //Allocating buffer for 4 Bytes add and 2 bytes port each + 4 bytes UID
+        ByteBuffer bb = ByteBuffer.allocate(17);
+        bb.position(0);
+
+        //remote address
+        pos = 0;
+        String hexStr = splitTabs[2].substring(pos, pos + 8);
+        bb.put(hexStringToByteArray(hexStr));
+
+        //local port
+        pos = splitTabs[2].indexOf(":");
+        hexStr = splitTabs[2].substring(pos +1, pos + 5);
+        bb.put(hexStringToByteArray(hexStr));
+
+
+        return new RemoteAddress(bb, type);
     }
 
-    public void getAddresses(ArrayList<String> arrayList, int uid) {
-
-        for(int i=1;i<arrayList.size();i++) {
-            if(arrayList.get(i).contains(" "+Integer.toString(uid)+" ")) {
-                String hex = arrayList.get(i).substring(20,28);
-                String port = arrayList.get(i).substring(29,33);
-                convertHexTCP(hex,port);
-            }
+    //Convert HexString to byte[]
+    public byte[] hexStringToByteArray(String s) {
+        byte[] b = new byte[s.length() / 2];
+        for (int i = 0; i < b.length; i++) {
+            int index = i * 2;
+            int v = Integer.parseInt(s.substring(index, index + 2), 16);
+            b[i] = (byte) v;
         }
+        return b;
     }
 
-    public void convertHexTCP(String hex, String port) {
-        String ip = "";
-        String port1 = "";
-        String four = hex.substring(0,2);
-        String three = hex.substring(2,4);
-        String two = hex.substring(4,6);
-        String one = hex.substring(6,8);
-        String flip = one+two+three+four;
+    //Init parsed data to IPv6 connection report
+    private RemoteAddress initReport6(String[] splitTabs, TLType type){
+        int pos;
+        //Allocating buffer for 16 Bytes add and 2 bytes port each + 4 bytes UID
+        ByteBuffer bb = ByteBuffer.allocate(41);
+        bb.position(0);
 
-        for(int i = 0; i < flip.length(); i = i + 2) {
-            ip = ip + Integer.valueOf(flip.substring(i, i+2), 16) + ".";
-        }
-        port1 += Integer.valueOf(port,16);
-        if(port1.contains("443")) {
-            addresses.add(ip.substring(0,ip.length()-1) + " - Port " + port1 + " (HTTPS, TCP)");
-        } else {
-            addresses.add(ip.substring(0,ip.length()-1) + " - Port " + port1 + " (TCP)");
-        }
+        //remote address
+        pos = 0;
+        String hexStr = splitTabs[2].substring(pos, pos + 32);
+        bb.put(hexStringToByteArray(hexStr));
 
-    }
+        //local port
+        pos = splitTabs[2].indexOf(":");
+        hexStr = splitTabs[2].substring(pos +1, pos + 5);
+        bb.put(hexStringToByteArray(hexStr));
 
-    public void getAddressesTCP6(ArrayList<String> arrayList, int uid) {
-
-        for(int i=1;i<arrayList.size();i++) {
-            if(arrayList.get(i).contains(" "+Integer.toString(uid)+" ")) {
-                String hex = arrayList.get(i).substring(44,76);
-                String port = arrayList.get(i).substring(77,81);
-                convertHexTCP6(hex,port);
-            }
-        }
-    }
-
-    public void convertHexTCP6(String hex, String port) {
-        hex = new StringBuilder(hex).reverse().toString();
-        StringBuilder ip = new StringBuilder();
-        String port1 = "";
-        for(int i=0;i<hex.length();i=i+8){
-            String word = hex.substring(i,i+8);
-            for (int j = word.length() - 1; j >= 0; j = j - 2) {
-                ip.append(word.substring(j - 1, j + 1));
-                ip.append((j==5)?":":"");//in the middle
-            }
-            ip.append(":");
-        }
-
-        port1 += Integer.valueOf(port,16);
-        if(port1.contains("443")) {
-            addresses.add(ip.substring(0,ip.length()-1) + " - Port " + port1 + " (HTTPS, TCPv6)");
-        } else {
-            addresses.add(ip.substring(0,ip.length()-1) + " - Port " + port1 + " (TCPv6)");
-        }
-    }
-
-    public void getAddressesUDP(ArrayList<String>arrayList, int uid) {
-
-        for(int i=1;i<arrayList.size();i++) {
-            if(arrayList.get(i).contains(" "+Integer.toString(uid)+" ")) {
-                String hex = arrayList.get(i).substring(22,30);
-                String port = arrayList.get(i).substring(31,35);
-                convertHexUDP(hex,port);
-            }
-        }
-    }
-
-    public void convertHexUDP(String hex, String port) {
-        String ip = "";
-        String port1 = "";
-        String four = hex.substring(0,2);
-        String three = hex.substring(2,4);
-        String two = hex.substring(4,6);
-        String one = hex.substring(6,8);
-        String flip = one+two+three+four;
-
-        for(int i = 0; i < flip.length(); i = i + 2) {
-            ip = ip + Integer.valueOf(flip.substring(i, i+2), 16) + ".";
-        }
-
-        port1 += Integer.valueOf(port,16);
-        addresses.add(ip.substring(0,ip.length()-1) + " - Port " + port1 + " (UDP)");
+        return new RemoteAddress(bb, type);
     }
 
 }

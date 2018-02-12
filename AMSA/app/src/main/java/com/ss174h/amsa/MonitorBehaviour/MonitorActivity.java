@@ -28,6 +28,7 @@ public class MonitorActivity extends Activity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+      KnownPorts.initPortMap();
     if (savedInstanceState == null) {
       getFragmentManager().beginTransaction().add(android.R.id.content, new ProcessListFragment()).commit();
     }
