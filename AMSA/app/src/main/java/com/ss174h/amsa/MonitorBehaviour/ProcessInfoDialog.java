@@ -30,6 +30,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -171,19 +172,17 @@ public class ProcessInfoDialog extends DialogFragment {
 
       ProcessRemoteIP p = LogRemoteIPIntentService.processesRemoteIPs.get(position);
 
-      html.p().strong("TRAFFIC DESTINATIONS:");
+      html.p().u().strong("TRAFFIC DESTINATIONS").br().close();
       final String item1;
       final String item2_type;
       final String item2_value;
 
       for (RemoteAddress address : p.getRemoteAddresses()) {
           //Log.d(" Dialog ").append(address.getRemoteAdd().getHostAddress());
-          html.p().strong("HOST NAME: ").append(address.getRemoteAdd().getHostName());
+          html.p().strong("HOST NAME: ").font(Color.BLUE, address.getRemoteAdd().getHostName());
           html.p().strong("IP Address: ").append(address.getRemoteAdd().getHostAddress());
           html.p().strong("PORT: ").append(address.getRemotePort());
           html.p().strong("Connection Info: ").append(KnownPorts.CompileConnectionInfo(address.getRemotePort(), address.getType()));
-
-
       }
 
 
