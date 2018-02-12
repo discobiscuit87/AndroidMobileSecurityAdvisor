@@ -176,16 +176,18 @@ public class ProcessInfoDialog extends DialogFragment {
       final String item1;
       final String item2_type;
       final String item2_value;
+      if (p.getRemoteAddresses().size()>0) {
 
-      for (RemoteAddress address : p.getRemoteAddresses()) {
-          //Log.d(" Dialog ").append(address.getRemoteAdd().getHostAddress());
-          html.p().strong("HOST NAME: ").font(Color.BLUE, address.getRemoteAdd().getHostName());
-          html.p().strong("IP Address: ").append(address.getRemoteAdd().getHostAddress());
-          html.p().strong("PORT: ").append(address.getRemotePort());
-          html.p().strong("Connection Info: ").append(KnownPorts.CompileConnectionInfo(address.getRemotePort(), address.getType()));
-      }
+          for (RemoteAddress address : p.getRemoteAddresses()) {
+              //Log.d(" Dialog ").append(address.getRemoteAdd().getHostAddress());
+              html.p().strong("HOST NAME: ").font(Color.BLUE, address.getRemoteAdd().getHostName());
+              html.p().strong("IP Address: ").append(address.getRemoteAdd().getHostAddress());
+              html.p().strong("PORT: ").append(address.getRemotePort());
+              html.p().strong("Connection Info: ").append(KnownPorts.CompileConnectionInfo(address.getRemotePort(), address.getType()));
+          }
 
-
+      }else
+          html.p().strong().font(Color.RED, "No addresses are registered");
     return html.build();
   }
 
