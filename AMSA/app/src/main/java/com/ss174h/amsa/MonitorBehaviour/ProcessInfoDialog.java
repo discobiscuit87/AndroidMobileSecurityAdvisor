@@ -105,7 +105,7 @@ public class ProcessInfoDialog extends DialogFragment {
         })
         .create();
   }
-    //show the total RAM availableable
+    //show the total RAM available
     public long totalRAM() {
 
         ActivityManager actManager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
