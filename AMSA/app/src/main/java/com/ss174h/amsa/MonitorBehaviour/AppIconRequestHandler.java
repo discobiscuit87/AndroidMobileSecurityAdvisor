@@ -26,13 +26,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
-
-
 import com.squareup.picasso.Request;
 import com.squareup.picasso.RequestHandler;
-
 import java.io.IOException;
-
 import static com.ss174h.amsa.MonitorBehaviour.Utils.drawableToBitmap;
 import static com.squareup.picasso.Picasso.LoadedFrom.DISK;
 

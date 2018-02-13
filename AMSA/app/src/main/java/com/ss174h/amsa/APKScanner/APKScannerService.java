@@ -6,14 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
-
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
-
-import static android.content.pm.PackageManager.GET_CONFIGURATIONS;
-import static android.content.pm.PackageManager.GET_GIDS;
-import static android.content.pm.PackageManager.GET_PERMISSIONS;
 import static android.content.pm.PackageManager.GET_SIGNATURES;
 
 public class APKScannerService extends IntentService {

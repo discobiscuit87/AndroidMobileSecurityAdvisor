@@ -23,9 +23,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
-
 import com.jaredrummler.android.processes.models.AndroidAppProcess;
-import com.ss174h.amsa.MainActivity;
 
 
 import java.util.List;

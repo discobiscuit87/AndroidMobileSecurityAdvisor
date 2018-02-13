@@ -7,12 +7,9 @@ import android.os.AsyncTask;
 import android.os.FileObserver;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-
 import com.ss174h.amsa.R;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;

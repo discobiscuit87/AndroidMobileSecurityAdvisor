@@ -19,7 +19,7 @@ package com.ss174h.amsa.MonitorBehaviour;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,15 +27,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.jaredrummler.android.processes.models.AndroidAppProcess;
 import com.squareup.picasso.Picasso;
 import com.ss174h.amsa.R;
-
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.ss174h.amsa.MonitorBehaviour.AppIconRequestHandler.SCHEME_PNAME;
 
 public class ProcessListAdapter extends BaseAdapter {
 
@@ -44,22 +40,12 @@ public class ProcessListAdapter extends BaseAdapter {
   private final Context context;
   private final Picasso picasso;
   private final int iconSize;
-  //private PackageManager pm;
 
   public ProcessListAdapter(Context context, List<AndroidAppProcess> processes) {
     this.context = context.getApplicationContext();
     this.inflater = LayoutInflater.from(context);
     this.iconSize = Utils.toPx(context, 46);
     this.picasso = Picasso.with(context);
-    //pm = context.getPackageManager();
-
-
-    //this.processes = new ArrayList<AndroidAppProcess>();
-    //for (AndroidAppProcess p : processes) {
-     //  if (isSideloaded(p.getPackageName())==true){
-     //    this.processes.add(p);
-     //  }
-    //}
     this.processes = processes;
   }
 
@@ -81,7 +67,8 @@ public class ProcessListAdapter extends BaseAdapter {
     if (convertView == null) {
       convertView = inflater.inflate(R.layout.list_item_process, parent, false);
       holder = new ViewHolder(convertView);
-    } else {
+    }
+    else {
       holder = (ViewHolder) convertView.getTag();
     }
 
@@ -90,11 +77,15 @@ public class ProcessListAdapter extends BaseAdapter {
     ImageView imageView = holder.find(R.id.imageView);
     TextView textView = holder.find(R.id.textView);
 
-    picasso.load(Uri.parse(SCHEME_PNAME + ":" + process.getPackageName()))
-        .placeholder(android.R.drawable.sym_def_app_icon)
-        .resize(iconSize, iconSize)
-        .centerInside()
-        .into(imageView);
+
+    Drawable icon = null;
+    try {
+      icon = context.getPackageManager().getApplicationIcon(process.getPackageName());
+      imageView.setImageDrawable(icon);
+    }
+    catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+    }
 
     textView.setText(Utils.getName(context, process));
 
@@ -121,7 +112,5 @@ public class ProcessListAdapter extends BaseAdapter {
       //noinspection unchecked
       return (T) v;
     }
-
   }
-
 }

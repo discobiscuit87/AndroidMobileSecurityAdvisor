@@ -1,7 +1,5 @@
 package com.ss174h.amsa.MonitorBehaviour;
 
-import android.util.Log;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
@@ -127,26 +125,6 @@ public class RemoteAddress {
         bb.get(b);
         remotePort = twoBytesToInt(b);
     }
-
-    /*
-    //======================================
-    public String convertHexTCP(String hex) {
-        String ip = "";
-        String port1 = "";
-        String four = hex.substring(0,2);
-        String three = hex.substring(2,4);
-        String two = hex.substring(4,6);
-        String one = hex.substring(6,8);
-        String flip = one+two+three+four;
-
-        for(int i = 0; i < flip.length(); i = i + 2) {
-            ip = ip + Integer.valueOf(flip.substring(i, i+2), 16) + ".";
-        }
-
-        return ip.substring(0,ip.length()-1);
-
-    }
-    */
 }
 
 

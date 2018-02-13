@@ -736,7 +736,4 @@ public class KnownPorts {
         m.put(1021, "exp1");
         m.put(1022, "exp2");
     }
-
-
-
 }

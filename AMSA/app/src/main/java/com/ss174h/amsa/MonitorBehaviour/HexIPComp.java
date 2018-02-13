@@ -1,6 +1,5 @@
 package com.ss174h.amsa.MonitorBehaviour;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Comparator;
 
 public class HexIPComp implements Comparator<RemoteAddress> {

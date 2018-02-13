@@ -1,10 +1,8 @@
 package com.ss174h.amsa.EnvCondition;
-import android.content.Context;
+
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.BatteryManager;
 import android.os.Build;
-import android.text.TextUtils;
+
 
 import static android.content.Context.BATTERY_SERVICE;
 
@@ -105,23 +103,5 @@ public class ReviewEnvPresenter {
         int level = batteryChangedIntent.getIntExtra("level", 0);
         int scale = batteryChangedIntent.getIntExtra("scale", 100);
         return String.valueOf(level * 100 / scale) + "%";
-        }
-
-    /*
-    public int getBatteryPercentage(Context context) {
-
-
-
-        IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent batteryStatus = context.registerReceiver(null, iFilter);
-
-        int level = batteryStatus != null ? batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) : -1;
-        int scale = batteryStatus != null ? batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1) : -1;
-
-        float batteryPct = level / (float) scale;
-
-        return (int) (batteryPct * 100);
     }
-    */
-
 }

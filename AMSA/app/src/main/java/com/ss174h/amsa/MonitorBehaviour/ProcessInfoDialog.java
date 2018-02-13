@@ -19,7 +19,6 @@ package com.ss174h.amsa.MonitorBehaviour;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
@@ -33,40 +32,20 @@ import android.content.pm.PackageInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.os.SystemClock;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.text.Spanned;
-import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageStats;
 import android.text.format.Formatter;
 import android.util.Log;
 import com.jaredrummler.android.processes.models.AndroidAppProcess;
 import com.jaredrummler.android.processes.models.Stat;
 import com.jaredrummler.android.processes.models.Statm;
-import com.jaredrummler.android.processes.models.Status;
 import com.jaredrummler.android.util.HtmlBuilder;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ProcessInfoDialog extends DialogFragment {
 
@@ -179,7 +158,6 @@ public class ProcessInfoDialog extends DialogFragment {
       if (p.getRemoteAddresses().size()>0) {
 
           for (RemoteAddress address : p.getRemoteAddresses()) {
-              //Log.d(" Dialog ").append(address.getRemoteAdd().getHostAddress());
               html.p().strong("HOST NAME: ").font(Color.BLUE, address.getRemoteAdd().getHostName());
               html.p().strong("IP Address: ").append(address.getRemoteAdd().getHostAddress());
               html.p().strong("PORT: ").append(address.getRemotePort());
@@ -222,10 +200,6 @@ public class ProcessInfoDialog extends DialogFragment {
 
         allNetworkRx = mobileWifiRx;
         allNetworkTx = mobileWifiTx;
-
-       // Log.d("ALL MOBILE WIFI RX", mobileWifiRx + " B");
-        //Log.d("ALL MOBILE WIFI TX", (mobileWifiTx + " B"));
-
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -235,25 +209,16 @@ public class ProcessInfoDialog extends DialogFragment {
 
         networkPackageRx = mobileWifiRx;
         networkPackageTx = mobileWifiTx;
-
-        //Log.d("NETWORK PACKAGE RX", mobileWifiRx + " B");
-        //Log.d("NETWORK PACKAGE TX",mobileWifiTx + " B");
     }
 
     private void fillTrafficStatsAll() {
         allTrafficRx = TrafficStatsHelper.getAllRxBytes();
         allTraffixTx = TrafficStatsHelper.getAllTxBytes();
-
-        //Log.d("TRAFFIC STATS TX",TrafficStatsHelper.getAllTxBytes() + " B");
-        //Log.d("TRAFFIC STATS RX", TrafficStatsHelper.getAllRxBytes() + " B");
     }
 
     private void fillTrafficStatsPackage(int uid) {
         trafficPackageRx = TrafficStatsHelper.getPackageRxBytes(uid);
         trafficPackageTx = TrafficStatsHelper.getPackageTxBytes(uid);
-
-        //Log.d("TRAFFIC S PACKAGE RX",TrafficStatsHelper.getPackageRxBytes(uid) + " B");
-        //Log.d("TRAFFIC S PACKAGE TX", TrafficStatsHelper.getPackageTxBytes(uid) + " B");
     }
 
     private boolean hasPermissionToReadPhoneStats() {
@@ -315,8 +280,6 @@ public class ProcessInfoDialog extends DialogFragment {
     private boolean hasPermissions() {
         return hasPermissionToReadNetworkHistory() && hasPermissionToReadPhoneStats();
     }
-
-
 }
 
 

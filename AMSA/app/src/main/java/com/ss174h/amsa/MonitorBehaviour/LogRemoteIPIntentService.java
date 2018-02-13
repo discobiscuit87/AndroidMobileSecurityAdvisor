@@ -2,24 +2,15 @@ package com.ss174h.amsa.MonitorBehaviour;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
-
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
 import com.jaredrummler.android.processes.models.AndroidAppProcess;
-
-import static com.ss174h.amsa.MonitorBehaviour.TLType.tcp;
-import static com.ss174h.amsa.MonitorBehaviour.TLType.tcp6;
-import static com.ss174h.amsa.MonitorBehaviour.TLType.udp;
 import static java.lang.Thread.sleep;
 
 public class LogRemoteIPIntentService extends IntentService {

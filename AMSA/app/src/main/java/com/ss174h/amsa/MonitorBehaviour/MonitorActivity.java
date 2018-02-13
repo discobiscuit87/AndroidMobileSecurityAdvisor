@@ -18,11 +18,7 @@
 package com.ss174h.amsa.MonitorBehaviour;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-
-import com.ss174h.amsa.MainActivity;
-
 
 public class MonitorActivity extends Activity {
 

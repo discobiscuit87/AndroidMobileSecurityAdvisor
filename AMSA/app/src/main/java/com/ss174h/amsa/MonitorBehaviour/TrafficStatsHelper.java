@@ -13,22 +13,6 @@ public class TrafficStatsHelper {
         return TrafficStats.getTotalTxBytes();
     }
 
-    public static long getAllRxBytesMobile() {
-        return TrafficStats.getMobileRxBytes();
-    }
-
-    public static long getAllTxBytesMobile() {
-        return TrafficStats.getMobileTxBytes();
-    }
-
-    public static long getAllRxBytesWifi() {
-        return TrafficStats.getTotalRxBytes() - TrafficStats.getMobileRxBytes();
-    }
-
-    public static long getAllTxBytesWifi() {
-        return TrafficStats.getTotalTxBytes() - TrafficStats.getMobileTxBytes();
-    }
-
     public static long getPackageRxBytes(int uid) {
         return TrafficStats.getUidRxBytes(uid);
     }

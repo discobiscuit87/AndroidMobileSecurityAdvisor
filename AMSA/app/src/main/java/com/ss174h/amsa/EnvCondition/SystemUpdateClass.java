@@ -25,8 +25,5 @@ public class SystemUpdateClass extends BroadcastReceiver {
                     "System is already the latest version",
                     Toast.LENGTH_SHORT).show();
         }
-
-
     }
-
 }

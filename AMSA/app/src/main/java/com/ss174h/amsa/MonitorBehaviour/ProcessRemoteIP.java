@@ -1,8 +1,5 @@
 package com.ss174h.amsa.MonitorBehaviour;
 
-import android.util.Log;
-
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
