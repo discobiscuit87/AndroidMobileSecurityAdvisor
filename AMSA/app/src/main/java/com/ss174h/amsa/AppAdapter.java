@@ -46,6 +46,7 @@ public class AppAdapter extends ArrayAdapter<String> {
         try {
             applicationInfo = pm.getApplicationInfo(packages.get(position), 0);
         } catch (final PackageManager.NameNotFoundException e) {
+
         }
 
         final String appName = (String)pm.getApplicationLabel(applicationInfo);

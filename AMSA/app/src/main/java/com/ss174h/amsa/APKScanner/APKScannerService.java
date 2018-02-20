@@ -12,7 +12,7 @@ import static android.content.pm.PackageManager.GET_SIGNATURES;
 public class APKScannerService extends IntentService {
 
     private PackageManager pm;
-    private ArrayList<String> packages = new ArrayList<>();
+    private ArrayList<String> packages;
     public static final String PROCESS_RESPONSE = "com.ss174h.amsa.intent.action.PROCESS_RESPONSE";
 
     public APKScannerService() {
@@ -28,6 +28,7 @@ public class APKScannerService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent in) {
+        packages = new ArrayList<>();
         String pName = in.getStringExtra("pName");
 
         if(pName != null) {

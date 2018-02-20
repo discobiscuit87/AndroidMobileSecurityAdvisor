@@ -194,6 +194,7 @@ public class CheckAppPermissionsActivity extends AppCompatActivity {
             TextView t6 = (TextView) findViewById(R.id.advice);
             AppCategories appCategories = new AppCategories();
             t6.setText(appCategories.checkCategory(category, permissions));
+            t6.setMovementMethod(new ScrollingMovementMethod());
         }
     }
 

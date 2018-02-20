@@ -81,12 +81,18 @@ public class AppCategories {
     }
 
     private String art(String permissions) {
-        String response;
+        int count = 0;
+        String response = "";
         if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response = "As this application is an Art & Design application, there is a reasonable chance that it requires external storage related permissions. Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+            count++;
+        }
+
+        if(count > 0) {
+            response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
         } else {
-            response = "As this application is an Art & Design application, these permissions seem to be unnecessary for it's category.\n";
+            response += "As this application is an Art & Design application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         return response;
@@ -99,27 +105,35 @@ public class AppCategories {
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is an Auto & Vehicles application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can view your precise location.\n")
+        }
+
+        if(permissions.contains("This app can view your precise location.\n")
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is an Auto & Vehicles application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else {
-            response += "As this application is an Auto & Vehicles application, these permissions may be unnecessary for it's category.\n";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is an Auto & Vehicles application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         return response;
     }
 
     private String beauty(String permissions) {
+        int count = 0;
         String response = "";
         if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Beauty application, there is a reasonable chance that it requires camera access permissions. Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+            count++;
+        }
+
+        if(count > 0) {
+            response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
         } else {
-            response += "As this application is a Beauty application, these permissions may be unnecessary for it's category.\n";
+            response += "As this application is a Beauty application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         return response;
@@ -132,15 +146,17 @@ public class AppCategories {
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Books & Reference application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Books & Reference application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else {
-            response += "As this application is an Books & Reference application, these permissions may be unnecessary for it's category.\n";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Books & Reference application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         return response;
@@ -153,30 +169,40 @@ public class AppCategories {
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Business application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can view your precise location.\n")
+        }
+
+        if(permissions.contains("This app can view your precise location.\n")
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Business application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can view your calendar.\n") ||
+        }
+
+        if(permissions.contains("This app can view your calendar.\n") ||
                 permissions.contains("This app can write to your calendar.\n")) {
             response += "As this application is a Business application, there is a reasonable chance that it requires calendar related permissions.\n";
             count++;
-        } else {
-            response += "As this application is a Business application, these permissions may be unnecessary for it's category.\n";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Business application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         return response;
     }
 
     private String comics(String permissions) {
+        int count = 0;
         String response = "";
         if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Comics application, there is a reasonable chance that it requires external storage related permissions. Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+            count++;
+        }
+
+        if(count > 0) {
+            response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
         } else {
             response += "As this application is a Comics application, these permissions seem to be unnecessary for it's category.\n";
         }
@@ -190,30 +216,40 @@ public class AppCategories {
         if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Communication application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can view your precise location.\n")
+        }
+
+        if(permissions.contains("This app can view your precise location.\n")
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Communication application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        }  else if(permissions.contains("This app can view your calendar.\n") ||
+        }
+
+        if(permissions.contains("This app can view your calendar.\n") ||
                 permissions.contains("This app can write to your calendar.\n")) {
             response += "As this application is a Communication application, there is a reasonable chance that it requires calendar related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Communication application, there is a reasonable chance that it requires camera access permissions.\n";
             count++;
-        } else if(permissions.contains("This app can record audio through your device.\n")) {
+        }
+
+        if(permissions.contains("This app can record audio through your device.\n")) {
             response += "As this application is a Communication application, there is a reasonable chance that it requires microphone access permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see the details of your contacts.\n") ||
+        }
+
+        if(permissions.contains("This app can see the details of your contacts.\n") ||
                 permissions.contains("This app can write information to your contacts.\n")) {
             response += "As this application is a Communication application, there is a reasonable chance that it requires contacts related permissions.\n";
             count++;
-        } else {
-            response += "As this application is a Communication application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Communication application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         return response;
@@ -225,26 +261,34 @@ public class AppCategories {
         if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Dating application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can view your precise location.\n")
+        }
+
+        if(permissions.contains("This app can view your precise location.\n")
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Dating application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can view your calendar.\n") ||
+        }
+
+        if(permissions.contains("This app can view your calendar.\n") ||
                 permissions.contains("This app can write to your calendar.\n")) {
             response += "As this application is a Dating application, there is a reasonable chance that it requires calendar related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Dating application, there is a reasonable chance that it requires camera access permissions.\n";
             count++;
-        } else if(permissions.contains("This app can record audio through your device.\n")) {
+        }
+
+        if(permissions.contains("This app can record audio through your device.\n")) {
             response += "As this application is a Dating application, there is a reasonable chance that it requires microphone access permissions.\n";
             count++;
-        } else {
-            response += "As this application is a Dating application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Dating application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         return response;
@@ -256,23 +300,29 @@ public class AppCategories {
         if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is an Education application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can view your calendar.\n") ||
+        }
+
+        if(permissions.contains("This app can view your calendar.\n") ||
                 permissions.contains("This app can write to your calendar.\n")) {
             response += "As this application is an Education application, there is a reasonable chance that it requires calendar related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can record audio through your device.\n")) {
+        }
+
+        if(permissions.contains("This app can record audio through your device.\n")) {
             response += "As this application is an Education application, there is a reasonable chance that it requires microphone access permissions.\n";
             count++;
-        } else if(permissions.contains("This app can read from your external storage.\n")
+        }
+
+        if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is an Education application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else {
-            response += "As this application is an Education application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is an Education application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         return response;
@@ -284,22 +334,28 @@ public class AppCategories {
         if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is an Entertainment application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can record audio through your device.\n")) {
+        }
+
+        if(permissions.contains("This app can record audio through your device.\n")) {
             response += "As this application is an Entertainment application, there is a reasonable chance that it requires microphone access permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is an Entertainment application, there is a reasonable chance that it requires camera access permissions.\n";
             count++;
-        } else if(permissions.contains("This app can read from your external storage.\n")
+        }
+
+        if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is an Entertainment application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else {
-            response += "As this application is an Entertainment application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        }  else {
+            response += "As this application is an Entertainment application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         return response;
@@ -312,23 +368,29 @@ public class AppCategories {
                 permissions.contains("This app can write to your calendar.\n")) {
             response += "As this application is an Events application, there is a reasonable chance that it requires calendar related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can view your precise location.\n")
+        }
+
+        if(permissions.contains("This app can view your precise location.\n")
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is an Events application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can view your calendar.\n") ||
+        }
+
+        if(permissions.contains("This app can view your calendar.\n") ||
                 permissions.contains("This app can write to your calendar.\n")) {
             response += "As this application is an Events application, there is a reasonable chance that it requires calendar related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is an Events application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else {
-            response += "As this application is an Entertainment application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is an Entertainment application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         return response;
@@ -340,10 +402,14 @@ public class AppCategories {
         if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Finance application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Finance application, there is a reasonable chance that it requires camera access permissions.\n";
             count++;
-        } else if(permissions.contains("This app can read from your external storage.\n")
+        }
+
+        if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Finance application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
@@ -351,6 +417,8 @@ public class AppCategories {
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        }  else {
+            response += "As this application is a Finance application, these permissions seem to be unnecessary for it's category.\n";
         }
 
         return response;
@@ -363,19 +431,23 @@ public class AppCategories {
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Food & Drink application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can view your calendar.\n") ||
+        }
+
+        if(permissions.contains("This app can view your calendar.\n") ||
                 permissions.contains("This app can write to your calendar.\n")) {
             response += "As this application is a Food & Drink application, there is a reasonable chance that it requires calendar related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is an Food & Drink application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else {
-            response += "As this application is a Food & Drink application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Food & Drink application, these permissions seem to be unnecessary for it's operation.";
         }
 
         return response;
@@ -388,15 +460,21 @@ public class AppCategories {
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Health & Fitness application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can view information (e.g. heart-rate) from any body sensors you may use.\n")) {
+        }
+
+        if(permissions.contains("This app can view information (e.g. heart-rate) from any body sensors you may use.\n")) {
             response += "As this application is a Health & Fitness application, there is a reasonable chance that it requires body-sensor related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Health & Fitness application, there is a reasonable chance that it requires camera related permissions.\n";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Health & Fitness application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -406,27 +484,35 @@ public class AppCategories {
         String response = "";
         if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a House & Home application, there is a reasonable chance that it requires camera related permissions.\n";
-        } else if(permissions.contains("This app can view your precise location.\n")
+        }
+
+        if(permissions.contains("This app can view your precise location.\n")
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a House & Home application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is an House & Home application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can send SMS messages.\n") ||
+        }
+
+        if(permissions.contains("This app can send SMS messages.\n") ||
                 permissions.contains("This app can receive SMS messages.\n") || permissions.contains("This app can read your SMS messages.\n")) {
             response += "As this application is a House & Home application, there is a reasonable chance that it requires SMS related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can read from your external storage.\n")
+        }
+
+        if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a House & Home application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        }  else {
-            response += "As this application is a House & Home application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a House & Home application, these permissions seem to be unnecessary for it's operation.";
         }
 
         return response;
@@ -437,23 +523,29 @@ public class AppCategories {
         String response = "";
         if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Lifestyle application, there is a reasonable chance that it requires camera related permissions.\n";
-        } else if(permissions.contains("This app can view your precise location.\n")
+        }
+
+        if(permissions.contains("This app can view your precise location.\n")
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Lifestyle application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Lifestyle application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can read from your external storage.\n")
+        }
+
+        if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Lifestyle application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        }  else {
-            response += "As this application is a Lifestyle application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Lifestyle application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -465,21 +557,27 @@ public class AppCategories {
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Maps & Navigation application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can view your precise location.\n")
+        }
+
+        if(permissions.contains("This app can view your precise location.\n")
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Maps & Navigation application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Maps & Navigation application, there is a reasonable chance that it requires camera related permissions.\n";
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Maps & Navigation application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else {
-            response += "As this application is a Maps & Navigation application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Maps & Navigation application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -491,21 +589,27 @@ public class AppCategories {
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Medical application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can view your precise location.\n")
+        }
+
+        if(permissions.contains("This app can view your precise location.\n")
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Medical application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Medical application, there is a reasonable chance that it requires camera related permissions.\n";
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Medical application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else {
-            response += "As this application is a Medical application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Medical application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -517,22 +621,28 @@ public class AppCategories {
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Music application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can view your precise location.\n")
+        }
+
+        if(permissions.contains("This app can view your precise location.\n")
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Music application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Music application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can record audio through your device.\n")) {
+        }
+
+        if(permissions.contains("This app can record audio through your device.\n")) {
             response += "As this application is a Music application, there is a reasonable chance that it requires microphone access permissions.\n";
             count++;
-        } else {
-            response += "As this application is a Music application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Music application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -544,19 +654,23 @@ public class AppCategories {
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a News & Magazines application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a News & Magazines application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can read from your external storage.\n")
+        }
+
+        if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a News & Magazines application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else {
-            response += "As this application is a News & Magazines application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a News & Magazines application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -568,25 +682,33 @@ public class AppCategories {
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Parenting application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Parenting application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can read from your external storage.\n")
+        }
+
+        if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Parenting application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Parenting application, there is a reasonable chance that it requires camera related permissions.\n";
-        } else if(permissions.contains("This app can send SMS messages.\n") ||
+        }
+
+        if(permissions.contains("This app can send SMS messages.\n") ||
                 permissions.contains("This app can receive SMS messages.\n") || permissions.contains("This app can read your SMS messages.\n")) {
             response += "As this application is a Parenting application, there is a reasonable chance that it requires SMS related permissions.\n";
             count++;
-        } else {
-            response += "As this application is a Parenting application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Parenting application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -598,12 +720,12 @@ public class AppCategories {
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Personalization application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else {
-            response += "As this application is a Personalization application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Personalization application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -615,21 +737,27 @@ public class AppCategories {
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Photography application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can view your precise location.\n")
+        }
+
+        if(permissions.contains("This app can view your precise location.\n")
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Photography application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Photography application, there is a reasonable chance that it requires camera related permissions.\n";
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Photography application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else {
-            response += "As this application is a Photography application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Photography application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -641,18 +769,22 @@ public class AppCategories {
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Productivity application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can view your precise location.\n")
+        }
+
+        if(permissions.contains("This app can view your precise location.\n")
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Productivity application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Productivity application, there is a reasonable chance that it requires camera related permissions.\n";
-        } else {
-            response += "As this application is a Productivity application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Productivity application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -662,23 +794,29 @@ public class AppCategories {
         String response = "";
         if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Shopping application, there is a reasonable chance that it requires camera related permissions.\n";
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Shopping application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can read from your external storage.\n")
+        }
+
+        if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Shopping application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can view your precise location.\n")
+        }
+
+        if(permissions.contains("This app can view your precise location.\n")
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Shopping application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else {
-            response += "As this application is a Shopping application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Shopping application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -690,30 +828,42 @@ public class AppCategories {
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Social application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Social application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can read from your external storage.\n")
+        }
+
+        if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Social application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Social application, there is a reasonable chance that it requires camera related permissions.\n";
-        } else if(permissions.contains("This app can send SMS messages.\n") ||
+        }
+
+        if(permissions.contains("This app can send SMS messages.\n") ||
                 permissions.contains("This app can receive SMS messages.\n") || permissions.contains("This app can read your SMS messages.\n")) {
             response += "As this application is a Social application, there is a reasonable chance that it requires SMS related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can record audio through your device.\n")) {
+        }
+
+        if(permissions.contains("This app can record audio through your device.\n")) {
             response += "As this application is a Social application, there is a reasonable chance that it requires microphone access permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see the details of your contacts.\n")) {
+        }
+
+        if(permissions.contains("This app can see the details of your contacts.\n")) {
             response += "As this application is a Social application, there is a reasonable chance that it requires contacts access permissions.\n";
-        } else {
-            response += "As this application is a Social application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Social application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -725,24 +875,32 @@ public class AppCategories {
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Sports application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Sports application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can read from your external storage.\n")
+        }
+
+        if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Sports application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Sports application, there is a reasonable chance that it requires camera related permissions.\n";
-        } else if(permissions.contains("This app can view information (e.g. heart-rate) from any body sensors you may use.\n")) {
+        }
+
+        if(permissions.contains("This app can view information (e.g. heart-rate) from any body sensors you may use.\n")) {
             response += "As this application is a Sports application, there is a reasonable chance that it requires body-sensor related permissions.\n";
             count++;
-        } else {
-            response += "As this application is a Sports application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Sports application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -753,27 +911,37 @@ public class AppCategories {
         if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Tools application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can read from your external storage.\n")
+        }
+
+        if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Tools application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Tools application, there is a reasonable chance that it requires camera related permissions.\n";
-        } else if(permissions.contains("This app can view your precise location.\n")
+        }
+
+        if(permissions.contains("This app can view your precise location.\n")
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Tools application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can record audio through your device.\n")) {
+        }
+
+        if(permissions.contains("This app can record audio through your device.\n")) {
             response += "As this application is a Tools application, there is a reasonable chance that it requires microphone access permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see the details of your contacts.\n")) {
+        }
+
+        if(permissions.contains("This app can see the details of your contacts.\n")) {
             response += "As this application is a Tools application, there is a reasonable chance that it requires contacts access permissions.\n";
-        } else {
-            response += "As this application is a Tools application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Tools application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -785,25 +953,33 @@ public class AppCategories {
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Travel & Local application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Travel & Local application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can read from your external storage.\n")
+        }
+
+        if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Travel & Local application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Travel & Local application, there is a reasonable chance that it requires camera related permissions.\n";
-        } else if(permissions.contains("This app can view your calendar.\n") ||
+        }
+
+        if(permissions.contains("This app can view your calendar.\n") ||
                 permissions.contains("This app can write to your calendar.\n")) {
             response += "As this application is a Travel & Local application, there is a reasonable chance that it requires calendar related permissions.\n";
             count++;
-        } else {
-            response += "As this application is a Travel & Local application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Travel & Local application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -815,17 +991,21 @@ public class AppCategories {
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Video Players & Editors application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Video Players & Editors application, there is a reasonable chance that it requires camera related permissions.\n";
-        } else if(permissions.contains("This app can record audio through your device.\n")) {
+        }
+
+        if(permissions.contains("This app can record audio through your device.\n")) {
             response += "As this application is a Video Players & Editors application, there is a reasonable chance that it requires microphone access permissions.\n";
             count++;
-        } else {
-            response += "As this application is a Video Players & Editors application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Video Players & Editors application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -837,19 +1017,23 @@ public class AppCategories {
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Weather application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Weather application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can read from your external storage.\n")
+        }
+
+        if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Weather application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else {
-            response += "As this application is a Weather application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Weather application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -860,18 +1044,22 @@ public class AppCategories {
         if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Libraries & Demo application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can read from your external storage.\n")
+        }
+
+        if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Libraries & Demo application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Libraries & Demo application, there is a reasonable chance that it requires camera related permissions.\n";
-        } else {
-            response += "As this application is a Libraries & Demo application, these permissions seem to be unnecessary for it's operation.";
         }
 
         if(count > 0) {
             response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Libraries & Demo application, these permissions seem to be unnecessary for it's operation.";
         }
         return response;
     }
@@ -883,18 +1071,32 @@ public class AppCategories {
                 || permissions.contains("This app can view your approximate location.\n")) {
             response += "As this application is a Game application, there is a reasonable chance that it requires location related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
+        }
+
+        if(permissions.contains("This app can see a list of user accounts stored on this device.\n")) {
             response += "As this application is a Game application, there is a reasonable chance that it requires access to user accounts stored on the device.\n";
             count++;
-        } else if(permissions.contains("This app can read from your external storage.\n")
+        }
+
+        if(permissions.contains("This app can read from your external storage.\n")
                 || permissions.contains("This app can write information to your external storage.\n")) {
             response += "As this application is a Game application, there is a reasonable chance that it requires external storage related permissions.\n";
             count++;
-        } else if(permissions.contains("This app can access your camera.\n")) {
+        }
+
+        if(permissions.contains("This app can access your camera.\n")) {
             response += "As this application is a Game application, there is a reasonable chance that it requires camera related permissions.\n";
-        } else if(permissions.contains("This app can record audio through your device.\n")) {
+        }
+
+        if(permissions.contains("This app can record audio through your device.\n")) {
             response += "As this application is a Game application, there is a reasonable chance that it requires microphone access permissions.\n";
             count++;
+        }
+
+        if(count > 0) {
+            response += "Any other listed dangerous permissions may be unnecessary for it's operation.\n";
+        } else {
+            response += "As this application is a Game application, these permissions seem to be unnecessary for it's operation.";
         }
 
         return response;

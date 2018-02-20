@@ -117,12 +117,10 @@ public class MainActivity extends AppCompatActivity {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!array.isEmpty()) {
                     Intent appIntent = new Intent(v.getContext(), ViewAppsActivity.class);
                     appIntent.putStringArrayListExtra("array",array);
                     appIntent.putExtra("Check","CheckCerts");
                     v.getContext().startActivity(appIntent);
-                }
             }
         });
 
@@ -130,11 +128,9 @@ public class MainActivity extends AppCompatActivity {
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!array.isEmpty()) {
                     Intent appIntent = new Intent(v.getContext(), ScanMalwareActivity.class);
                     appIntent.putStringArrayListExtra("array",array);
                     v.getContext().startActivity(appIntent);
-                }
             }
         });
 
@@ -142,12 +138,10 @@ public class MainActivity extends AppCompatActivity {
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!array.isEmpty()) {
                     Intent appIntent = new Intent(v.getContext(), ViewAppsActivity.class);
                     appIntent.putStringArrayListExtra("array",array);
                     appIntent.putExtra("Check","CheckPerms");
                     v.getContext().startActivity(appIntent);
-                }
             }
         });
 
@@ -156,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MonitorActivity.class);
-                
                 startActivity(intent);
             }
         });
@@ -165,9 +158,7 @@ public class MainActivity extends AppCompatActivity {
         b5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this,"Reviewing mobile environment",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getApplicationContext(), ReviewEnv.class);
-
                 startActivity(intent);
             }
         });
@@ -176,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        unregisterReceiver(apkReceiver);
         finish();
     }
 
@@ -258,7 +250,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
             array = intent.getStringArrayListExtra("array");
 
             if(array.isEmpty()) {
