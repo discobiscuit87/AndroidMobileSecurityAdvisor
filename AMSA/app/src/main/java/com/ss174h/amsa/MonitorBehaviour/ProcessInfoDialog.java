@@ -43,7 +43,18 @@ import com.jaredrummler.android.processes.models.AndroidAppProcess;
 import com.jaredrummler.android.processes.models.Stat;
 import com.jaredrummler.android.processes.models.Statm;
 import com.jaredrummler.android.util.HtmlBuilder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -162,6 +173,9 @@ public class ProcessInfoDialog extends DialogFragment {
               html.p().strong("IP Address: ").append(address.getRemoteAdd().getHostAddress());
               html.p().strong("PORT: ").append(address.getRemotePort());
               html.p().strong("Connection Info: ").append(KnownPorts.CompileConnectionInfo(address.getRemotePort(), address.getType()));
+              String ip = address.getRemoteAdd().getHostAddress();
+              String country = getCountry(ip);
+              html.p().strong("Country: ").append(country);
           }
 
       }else
@@ -275,6 +289,36 @@ public class ProcessInfoDialog extends DialogFragment {
         if (!hasPermissionToReadPhoneStats()) {
             requestPhoneStateStats();
         }
+    }
+
+    private String getCountry(String ip) {
+      String country = "";
+      String line;
+      String address = "https://freegeoip.net/json/"+ip;
+
+      try {
+          URL url = new URL(address);
+          HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+          connection.setRequestMethod("GET");
+
+          InputStream in = new BufferedInputStream(connection.getInputStream());
+          BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+          StringBuilder sb = new StringBuilder();
+          while((line = bufferedReader.readLine()) != null) {
+              sb.append(line).append("\n");
+          }
+          String response = sb.toString();
+          JSONObject jsonObject = new JSONObject(response);
+          country = jsonObject.getString("country_name");
+      }  catch (MalformedURLException e) {
+          Log.e("Error", "Malformed URL Exception");
+      } catch (IOException io) {
+          Log.e("Error: ", "IO Exception");
+      } catch (JSONException jso) {
+          Log.e("Error: ", "JSON Exception");
+      }
+        
+      return country;
     }
 
     private boolean hasPermissions() {
